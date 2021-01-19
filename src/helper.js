@@ -21,4 +21,4 @@ const isValidCPF = (strCPF) => {
   return true;
 };
 
-export default isValidCPF;
+export { isValidCPF };

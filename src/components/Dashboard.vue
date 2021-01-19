@@ -154,7 +154,7 @@
 </template>
 <script>
 import { api } from "../services";
-import isValidCPF from "../helper";
+import { isValidCPF } from "../helper";
 
 export default {
   name: "Dashboard",
@@ -186,16 +186,49 @@ export default {
   methods: {
     saveApplication() {
       if (!this.isValidData()) return;
-      api.post("/applications", this.application).then(() => {
-        this.message = "Dados registrados com sucesso!";
-        this.clearForm();
-      });
+      this.message = "Enviando dados...";
+      api
+        .post("/applications", this.application)
+        .then(() => {
+          this.message = "Dados registrados com sucesso!";
+          this.clearForm();
+        })
+        .catch((error) => {
+          console.log(error);
+          this.message =
+            "Ocorreu algum erro. Por favor, tente enviar novamente.";
+        });
     },
     isValidData() {
       this.errors = [];
+
+      const requiredFields = [
+        { name: "'sala de vacina'", value: this.application.location_id },
+        { name: "'CPF do cidadão'", value: this.application.citizen.cpf },
+        { name: "'nome do cidadão'", value: this.application.citizen.name },
+        {
+          name: "'data de nascimento do cidadão'",
+          value: this.application.citizen.birthday,
+        },
+        { name: "'lote'", value: this.application.lot_id },
+        { name: "'vacinador'", value: this.application.vaccinator_id },
+        { name: "'grupo prioritário'", value: this.application.category_id },
+        {
+          name: "'grupo de atendimento'",
+          value: this.application.servicegroup_id,
+        },
+      ];
+
+      for (const field of requiredFields) {
+        if (!field.value) {
+          this.errors.push(`Preencha o campo ${field.name}`);
+        }
+      }
+
       if (!isValidCPF(this.application.citizen.cpf)) {
         this.errors.push("Informe um número de CPF válido");
       }
+
       const valid = !this.errors.length ? true : false;
       return valid;
     },
