@@ -5,7 +5,11 @@
     </div>
     <div class="form">
       <label for="location">Sala (Local)</label> <br />
-      <select class="select-form" name="location" v-model="location_id">
+      <select
+        class="select-form"
+        name="location"
+        v-model="application.location_id"
+      >
         <option
           v-for="location in locations"
           :key="location.id"
@@ -19,8 +23,8 @@
       <input
         type="text"
         name="cpf"
-        v-model="citizen.cpf"
-        v-mask="'###.###.###-##'"
+        v-model="application.citizen.cpf"
+        v-mask="'###########'"
       />
       <br />
 
@@ -28,21 +32,25 @@
       <input
         type="text"
         name="cns"
-        v-model="citizen.cns"
+        v-model="application.citizen.cns"
         v-mask="'XXXXXXXXXXXXXXX'"
       />
       <br />
 
       <label for="nome">Nome do cidadão</label><br />
-      <input type="text" name="nome" v-model="citizen.name" />
+      <input type="text" name="nome" v-model="application.citizen.name" />
       <br />
 
       <label for="dt_vacinacao">Data de nacimento do cidadão</label><br />
-      <input type="date" name="bithday" v-model="citizen.birthday" />
+      <input
+        type="date"
+        name="bithday"
+        v-model="application.citizen.birthday"
+      />
       <br />
 
       <label for="lot">Lote</label> <br />
-      <select class="select-form" name="lot" v-model="lot_id">
+      <select class="select-form" name="lot" v-model="application.lot_id">
         <option v-for="lot in lots" :key="lot.id" :value="lot.id">
           {{ lot.name }}
         </option>
@@ -50,7 +58,11 @@
       <br />
 
       <label for="vaccinator">Vacinador</label><br />
-      <select class="select-form" name="vaccinator" v-model="vaccinator_id">
+      <select
+        class="select-form"
+        name="vaccinator"
+        v-model="application.vaccinator_id"
+      >
         <option
           v-for="vaccinator in vaccinators"
           :value="vaccinator.id"
@@ -61,16 +73,20 @@
       ><br />
 
       <label for="dt_vacinacao">Data da vacinação</label><br />
-      <input type="date" name="dt_vacinacao" v-model="application_date" />
+      <input
+        type="date"
+        name="dt_vacinacao"
+        v-model="application.application_date"
+      />
       <br />
 
       <label for="grupo_prioriario">Grupo prioritário</label>
       <br />
       <select
         class="select-form"
-        v-model="category_id"
+        v-model="application.category_id"
         name="grupo_prioritario"
-        @change="() => fetchServicegroups(category_id)"
+        @change="() => fetchServicegroups(application.category_id)"
       >
         <option
           v-for="category in categories"
@@ -82,12 +98,12 @@
       </select>
       <br />
 
-      <div v-if="category_id">
+      <div v-if="application.category_id">
         <label for="grupo_atendimento">Grupo de atendimento</label>
         <br />
         <select
           class="select-form"
-          v-model="category_id"
+          v-model="application.servicegroup_id"
           name="grupo_atendimento"
         >
           <option
@@ -100,13 +116,15 @@
         </select>
         <br />
       </div>
-
-      <input
-        type="submit"
-        value="Próxima"
-        @click="testeIndex"
-        style="padding: 0.2rem"
-      />
+      <br />
+      <button @click.prevent="saveApplication">
+        Salvar
+      </button>
+      <br />
+      <button @click.prevent="clearForm">
+        Limpar
+      </button>
+      <p>{{ message }}</p>
     </div>
   </div>
 </template>
@@ -117,31 +135,44 @@ export default {
   name: "Dashboard",
 
   data: () => ({
-    location_id: "",
-    lot_id: "",
-    category_id: "",
-    servicegroups_id: "",
-    vaccinator_id: "",
-    application_date: "",
-    dose: 1,
+    application: {
+      location_id: "",
+      lot_id: "",
+      category_id: "",
+      servicegroup_id: "",
+      vaccinator_id: "",
+      application_date: "",
+      dose: 1,
+      citizen: {
+        cpf: "",
+        cns: "",
+        name: "",
+        birthday: "",
+      },
+    },
     locations: null,
     categories: null,
     servicegroups: null,
     lots: null,
-
-    citizen: {
-      cpf: "",
-      cns: "",
-      name: "",
-      birthday: "",
-    },
-
     vaccinators: null,
+    message: null,
   }),
   methods: {
-    testeIndex() {
-      //console.log(this.select.indexOf(this.opt));
-    }, //funcao teste criada para pegar o index do array > category_id, its work!
+    saveApplication() {
+      api.post("/applications", this.application).then(() => {
+        this.message = "Dados registrados com sucesso!";
+      });
+    },
+    clearForm() {
+      this.application.lot_id = "";
+      this.application.category_id = "";
+      this.application.servicegroup_id = "";
+      this.application.citizen.cpf = "";
+      this.application.citizen.cpf = "";
+      this.application.citizen.name = "";
+      this.application.citizen.birthday = "";
+      this.message = null;
+    },
     fetchVaccinators() {
       api.get("/vaccinators").then(({ data }) => {
         this.vaccinators = data.data;
