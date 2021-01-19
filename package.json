@@ -10,9 +10,11 @@
   "dependencies": {
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "sweetalert2": "^10.13.0",
     "v-mask": "^2.2.3",
     "vue": "^2.6.11",
     "vue-axios": "^3.2.2",
+    "vue-swal": "^1.0.0",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {
