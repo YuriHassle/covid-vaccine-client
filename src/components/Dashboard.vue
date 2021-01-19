@@ -5,7 +5,8 @@
     </div>
     <div class="form">
       <div class="box-form">
-        <label for="location">Sala (local)</label> <br />
+        <label for="location">Sala de vacina (local) <span>*</span></label>
+        <br />
         <select
           class="select-form"
           name="location"
@@ -22,7 +23,8 @@
         <br />
       </div>
       <div class="box-form">
-        <label for="cpf">CPF do cidadão</label><br />
+        <label for="cpf">CPF do cidadão (somente números) <span>*</span></label
+        ><br />
         <input
           type="text"
           name="cpf"
@@ -32,7 +34,7 @@
         <br />
       </div>
       <div class="box-form">
-        <label for="cns">CNS do cidadão</label><br />
+        <label for="cns">CNS do cidadão (somente números)</label><br />
         <input
           type="text"
           name="cns"
@@ -42,12 +44,15 @@
         <br />
       </div>
       <div class="box-form">
-        <label for="nome">Nome do cidadão</label><br />
+        <label for="nome">Nome do cidadão <span>*</span></label
+        ><br />
         <input type="text" name="nome" v-model="application.citizen.name" />
         <br />
       </div>
       <div class="box-form">
-        <label for="dt_vacinacao">Data de nacimento do cidadão</label><br />
+        <label for="dt_vacinacao"
+          >Data de nacimento do cidadão <span>*</span></label
+        ><br />
         <input
           type="date"
           name="bithday"
@@ -56,7 +61,7 @@
         <br />
       </div>
       <div class="box-form">
-        <label for="lot">Lote</label> <br />
+        <label for="lot">Lote <span>*</span></label> <br />
         <select class="select-form" name="lot" v-model="application.lot_id">
           <option v-for="lot in lots" :key="lot.id" :value="lot.id">
             {{ lot.name }}
@@ -65,7 +70,8 @@
         <br />
       </div>
       <div class="box-form">
-        <label for="vaccinator">Vacinador</label><br />
+        <label for="vaccinator">Vacinador <span>*</span></label
+        ><br />
         <select
           class="select-form"
           name="vaccinator"
@@ -82,7 +88,8 @@
       </div>
 
       <div class="box-form">
-        <label for="dt_vacinacao">Data da vacinação</label><br />
+        <label for="dt_vacinacao">Data da vacinação <span>*</span></label
+        ><br />
         <input
           type="date"
           name="dt_vacinacao"
@@ -91,7 +98,7 @@
         <br />
       </div>
       <div class="box-form">
-        <label for="grupo_prioriario">Grupo prioritário</label>
+        <label for="grupo_prioriario">Grupo prioritário <span>*</span></label>
         <br />
         <select
           class="select-form"
@@ -109,30 +116,37 @@
         </select>
         <br />
       </div>
-      <div class="box-form" v-if="application.category_id">
-        <div>
-          <label for="grupo_atendimento">Grupo de atendimento</label>
-          <br />
-          <select
-            class="select-form"
-            v-model="application.servicegroup_id"
-            name="grupo_atendimento"
+      <div class="box-form">
+        <label for="grupo_atendimento"
+          >Grupo de atendimento <span>*</span></label
+        >
+        <br />
+        <select
+          class="select-form"
+          v-model="application.servicegroup_id"
+          name="grupo_atendimento"
+        >
+          <option
+            v-for="servicegroup in servicegroups"
+            :key="servicegroup.id"
+            :value="servicegroup.id"
           >
-            <option
-              v-for="servicegroup in servicegroups"
-              :key="servicegroup.id"
-              :value="servicegroup.id"
-            >
-              {{ servicegroup.name }}
-            </option>
-          </select>
-          <br />
-        </div>
+            {{ servicegroup.name }}
+          </option>
+        </select>
+        <br />
       </div>
       <br />
+      <div v-if="errors.length">
+        <b>Por favor, corrija o(s) seguinte(s) erro(s):</b>
+        <ul>
+          <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+        </ul>
+      </div>
       <div>
-        <button class="button save" @click.prevent="saveApplication">SALVAR</button>
-        <button class="button clean" style="margin-left: 2rem" @click.prevent="clearForm">LIMPAR</button>
+        <button class="button save" @click.prevent="saveApplication">
+          SALVAR
+        </button>
       </div>
       <p>{{ message }}</p>
     </div>
@@ -140,6 +154,7 @@
 </template>
 <script>
 import { api } from "../services";
+import isValidCPF from "../helper";
 
 export default {
   name: "Dashboard",
@@ -166,22 +181,32 @@ export default {
     lots: null,
     vaccinators: null,
     message: null,
+    errors: [],
   }),
   methods: {
     saveApplication() {
+      if (!this.isValidData()) return;
       api.post("/applications", this.application).then(() => {
         this.message = "Dados registrados com sucesso!";
+        this.clearForm();
       });
+    },
+    isValidData() {
+      this.errors = [];
+      if (!isValidCPF(this.application.citizen.cpf)) {
+        this.errors.push("Informe um número de CPF válido");
+      }
+      const valid = !this.errors.length ? true : false;
+      return valid;
     },
     clearForm() {
       this.application.lot_id = "";
       this.application.category_id = "";
       this.application.servicegroup_id = "";
       this.application.citizen.cpf = "";
-      this.application.citizen.cpf = "";
+      this.application.citizen.cns = "";
       this.application.citizen.name = "";
       this.application.citizen.birthday = "";
-      this.message = null;
     },
     fetchVaccinators() {
       api.get("/vaccinators").then(({ data }) => {
@@ -237,8 +262,9 @@ select {
   -moze-appearance: menulist !important; /* override vuetify style */
   appearance: menulist !important; /* override vuetify style */
 }
-label, option{
-  font-family: 'Open Sans', sans-serif;
+label,
+option {
+  font-family: "Open Sans", sans-serif;
   font-size: 1em;
 }
 .text-header {
@@ -270,17 +296,17 @@ label, option{
   // filter: drop-shadow(2px 2px 2px black);
   padding: 0.4rem 4rem 0.4rem 1rem;
 }
-.button{
+.button {
   border: 1px solid black;
-  padding: .2rem 2rem;
-  border-radius: .4rem;
+  padding: 0.2rem 2rem;
+  border-radius: 0.4rem;
   color: #009aa0;
 }
-.save{
+.save {
   background-color: snow;
   outline: none;
 }
-.clean{
+.clean {
   background-color: transparent;
   border: none;
 }
