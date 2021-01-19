@@ -1,5 +1,8 @@
 <template>
   <div class="entire-div">
+    <div class="header">
+      <img :src="Logo" />
+    </div>
     <div class="text-header">
       <p>Vacinação COVID-19, SEMSA MANAUS</p>
     </div>
@@ -130,17 +133,53 @@
         </div>
       </div>
       <br />
-      <div>
-        <button class="button save" @click.prevent="saveApplication">SALVAR</button>
-        <button class="button clean" style="margin-left: 2rem" @click.prevent="clearForm">LIMPAR</button>
+      <div style="margin-bottom: 1.5rem">
+        <button class="button save" @click.prevent="saveApplication">
+          SALVAR
+        </button>
+        <button
+          class="button clean"
+          style="margin-left: 2rem"
+          @click.prevent="clearForm"
+        >
+          LIMPAR
+        </button>
       </div>
-      <p>{{ message }}</p>
+    </div>
+    <div class="footer">
+      <div class="primeira-secao">
+        <p class="footer-text-header">Imunização SEMSA</p>
+        <p>Dúvidas ou problemas? entre em contato.</p>
+        <p>imuniza@pmm.am.gov.b</p>
+        <div class="copyright">
+          <p>
+            © 2021 - Secretaria Municipal de Saúde - SEMSA Desenvolvido pelo
+          </p>
+          <p>Departamento de Tecnologia da Informação - DTI.</p>
+        </div>
+      </div>
+      <div class="segunda-secao">
+        <p class="footer-text-header">Endereço</p>
+        <p>
+          Avenida Mário Ypiranga Monteiro, 1695 - Adrianópolis Cep: 69057-001
+        </p>
+      </div>
+      <div class="terceira-secao">
+        <p class="footer-text-header">Link</p>
+        <p>
+          <a href="https://semsa.manaus.am.gov.br/"
+            >Secretaria Municipal de Saúde de Manaus</a
+          >
+        </p>
+        <p><a href="http://www.manaus.am.gov.br/">Prefeitura de Manaus</a></p>
+      </div>
     </div>
   </div>
 </template>
 <script>
 import { api } from "../services";
-
+import Logo from "../assets/fullbrasao.png";
+import Swal from "sweetalert2";
 export default {
   name: "Dashboard",
 
@@ -166,12 +205,30 @@ export default {
     lots: null,
     vaccinators: null,
     message: null,
+    Logo,
   }),
   methods: {
     saveApplication() {
-      api.post("/applications", this.application).then(() => {
-        this.message = "Dados registrados com sucesso!";
-      });
+      api
+        .post("/applications", this.application)
+        .then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "Cadastrado com êxito!",
+            text: "Dados registrados com sucesso!",
+            showConfirmButton: false,
+            timer: 1100,
+          });
+        })
+        .catch(() => {
+          Swal.fire({
+            icon: "error",
+            title: "Erro ao cadastrar!",
+            text: "Revise os dados e envie novamente.",
+            showConfirmButton: false,
+            timer: 1100,
+          });
+        });
     },
     clearForm() {
       this.application.lot_id = "";
@@ -237,16 +294,53 @@ select {
   -moze-appearance: menulist !important; /* override vuetify style */
   appearance: menulist !important; /* override vuetify style */
 }
-label, option{
-  font-family: 'Open Sans', sans-serif;
+label,
+option {
+  font-family: "Open Sans", sans-serif;
   font-size: 1em;
 }
+.header {
+  display: flex;
+  padding: 1rem;
+  background-color: #005346;
+  justify-content: center;
+}
+.copyright {
+  background-color: #005346;
+  p {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0px !important;
+  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.footer {
+  background-color: #005346;
+  color: #f5f5f5;
+  display: flex;
+  flex-direction: row;
+  row-gap: 3;
+  justify-content: space-around;
+}
+.footer-text-header {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 0px !important;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+a {
+  text-decoration: none;
+  color: #f5f5f5 !important;
+}
 .text-header {
-  background-color: rgb(0, 150, 136);
+  background-color: #005346;
   p {
     font-family: "Roboto", sans-serif;
     font-weight: bold;
-    font-size: 1.5em;
+    font-size: 2em;
+    text-align: center;
     padding: 1rem 2rem;
     color: rgba(22, 22, 22, 0.884);
   }
@@ -270,17 +364,17 @@ label, option{
   // filter: drop-shadow(2px 2px 2px black);
   padding: 0.4rem 4rem 0.4rem 1rem;
 }
-.button{
+.button {
   border: 1px solid black;
-  padding: .2rem 2rem;
-  border-radius: .4rem;
+  padding: 0.2rem 2rem;
+  border-radius: 0.4rem;
   color: #009aa0;
 }
-.save{
+.save {
   background-color: snow;
   outline: none;
 }
-.clean{
+.clean {
   background-color: transparent;
   border: none;
 }
