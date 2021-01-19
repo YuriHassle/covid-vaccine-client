@@ -40,9 +40,9 @@
       <input type="text" name="cpf_vacinador" v-model="vacinador.cpf" />
       <br />
 
-      <label for="dt_vacinacao">Data da vacinação</label><br />
+      <!-- <label for="dt_vacinacao">Data da vacinação</label><br />
       <input type="text" name="dt_vacinacao" v-model="vacinado.dt_vacinacao" />
-      <br />
+      <br /> -->
 
       <label for="grupo_prioriario">Grupo prioritário</label>
       <br />
@@ -76,8 +76,8 @@
             name="quilombola"
             value="0"
           />
-          <label for="quilombola">
-            Povos e Comunidades Tradicionais - Quilombola</label
+          <label for="quilombola"
+            >Povos e Comunidades Tradicionais - Quilombola</label
           >
           <br />
           <input
@@ -87,7 +87,7 @@
             value="1"
           />
           <label for="ribeirinha">
-            Povos e Comunidades Tradicionais - Ribeirinha</label
+            Povos e C.2rem .2remomunidades Tradicionais - Ribeirinha</label
           >
         </div>
         <div v-else-if="select2.indexOf(opt2) == 4">
@@ -223,30 +223,16 @@
       <br />
 
       <div>
-        <input type="submit" value="Próxima" @click="testeIndex" style="padding: .2rem"/>
+        <input
+          type="submit"
+          value="Próxima"
+          @click="testeIndex"
+          style="padding: 0.2rem"
+        />
       </div>
     </div>
   </div>
 </template>
-<style scoped>
-input,
-select {
-  border: 1px solid black;
-}
-select {
-  -webkit-appearance: menulist !important; /* override vuetify style */
-  -moze-appearance: menulist !important; /* override vuetify style */
-  appearance: menulist !important; /* override vuetify style */
-}
-.text-header {
-  font-family: "Roboto", sans-serif;
-  font-size: 1.2em;
-  padding: 1rem 2rem;
-}
-.form {
-  padding-left: 2rem;
-}
-</style>
 <script>
 export default {
   name: "Dashboard",
@@ -311,7 +297,7 @@ export default {
       cpf: "",
       cns: "",
       name: "",
-      dt_vacinacao: "",
+      dt_vacinacao: new Date(),
       grupo: "",
     },
     vacinador: {
@@ -319,9 +305,32 @@ export default {
     },
   }),
   methods: {
-    teste() {
+    testeIndex() {
       console.log(this.select.indexOf(this.opt));
     }, //funcao teste criada para pegar o index do array > category_id, its work!
   },
 };
 </script>
+<style scoped>
+input,
+select {
+  padding: 0.1rem 0.3rem 0.2rem;
+}
+input,
+select {
+  border: 1px solid black;
+}
+select {
+  -webkit-appearance: menulist !important; /* override vuetify style */
+  -moze-appearance: menulist !important; /* override vuetify style */
+  appearance: menulist !important; /* override vuetify style */
+}
+.text-header {
+  font-family: "Roboto", sans-serif;
+  font-size: 1.2em;
+  padding: 1rem 2rem;
+}
+.form {
+  padding-left: 2rem;
+}
+</style>
