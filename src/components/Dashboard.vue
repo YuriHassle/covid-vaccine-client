@@ -29,7 +29,7 @@
         <label for="cpf">CPF do cidadão (somente números) <span>*</span></label
         ><br />
         <input
-          type="text"
+          type="number"
           name="cpf"
           v-model="application.citizen.cpf"
           v-mask="'###########'"
@@ -39,7 +39,7 @@
       <div class="box-form">
         <label for="cns">CNS do cidadão (somente números)</label><br />
         <input
-          type="text"
+          type="number"
           name="cns"
           v-model="application.citizen.cns"
           v-mask="'XXXXXXXXXXXXXXX'"
@@ -52,7 +52,6 @@
         <input
           type="text"
           name="nome"
-          class="citizen-name"
           v-model="application.citizen.name"
           v-mask="'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'"
         />
@@ -342,9 +341,7 @@ select {
 input {
   border-radius: 0.2rem !important;
 }
-.citizen-name {
-  width: 400px;
-}
+
 select {
   padding: 0.4rem 0.4rem 0.5rem;
   border-radius: 0.4rem;
