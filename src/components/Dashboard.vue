@@ -144,13 +144,16 @@
         <button class="button save" @click.prevent="saveApplication">
           SALVAR
         </button>
-        <button
-          class="button clean"
-          style="margin-left: 2rem"
-          @click.prevent="clearForm"
-        >
-          LIMPAR
-        </button>
+        <br />
+        <div v-if="errors.length">
+          <b>Por favor, corrija o(s) seguinte(s) erro(s):</b>
+          <ul>
+            <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+          </ul>
+        </div>
+        <div class="message">
+          {{ message }}
+        </div>
       </div>
     </div>
     <div class="footer">
@@ -188,7 +191,6 @@ import { api } from "../services";
 import { isValidCPF } from "../helper";
 import Logo from "../assets/fullbrasao.png";
 import Swal from "sweetalert2";
-import isValidCPF from "../helper";
 
 export default {
   name: "Dashboard",
@@ -225,23 +227,23 @@ export default {
       api
         .post("/applications", this.application)
         .then(() => {
-          this.message = "Dados registrados com sucesso!";
+          this.message = "";
           this.clearForm();
           Swal.fire({
             icon: "success",
-            title: "Cadastrado com êxito!",
-            text: "Dados registrados com sucesso!",
+            title: "Cadastrado com êxito",
+            text: "Os dados registrados com sucesso!",
             showConfirmButton: false,
-            timer: 1100,
+            timer: 1500,
           });
         })
         .catch(() => {
           Swal.fire({
             icon: "error",
-            title: "Erro ao cadastrar!",
-            text: "Revise os dados e envie novamente.",
+            title: "Erro ao cadastrar",
+            text: "Ocorreu algum erro. Por facor, tente novamente.",
             showConfirmButton: false,
-            timer: 1100,
+            timer: 2000,
           });
         });
     },
@@ -272,13 +274,7 @@ export default {
       }
 
       if (!isValidCPF(this.application.citizen.cpf)) {
-        Swal.fire({
-          icon: "error",
-          title: "Erro ao cadastrar!",
-          text: "Informe um número de CPF válido!",
-          showConfirmButton: false,
-          timer: 1100,
-        });
+        this.errors.push("Informe um número de CPF válido");
       }
 
       const valid = !this.errors.length ? true : false;
