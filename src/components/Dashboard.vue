@@ -49,7 +49,13 @@
       <div class="box-form">
         <label for="nome">Nome do cidadão <span>*</span></label
         ><br />
-        <input type="text" name="nome" v-model="application.citizen.name" />
+        <input
+          type="text"
+          name="nome"
+          class="citizen-name"
+          v-model="application.citizen.name"
+          v-mask="'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'"
+        />
         <br />
       </div>
       <div class="box-form">
@@ -331,10 +337,13 @@ select {
   border: 1px solid black !important;
   outline: black;
   margin: 0.4rem 0rem 0.4rem 0rem;
-  min-width: 400px;
+  min-width: 300px;
 }
 input {
   border-radius: 0.2rem !important;
+}
+.citizen-name {
+  width: 400px;
 }
 select {
   padding: 0.4rem 0.4rem 0.5rem;
@@ -407,7 +416,6 @@ a {
   margin-top: 1rem;
 }
 .box-form {
-  width: 60%;
   background-color: rgba(230, 236, 238, 0.52);
   margin: 1rem 0rem 1rem 0rem;
   border-radius: 0.2rem;
