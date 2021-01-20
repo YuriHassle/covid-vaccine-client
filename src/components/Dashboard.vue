@@ -162,38 +162,35 @@
       </div>
     </div>
     <div class="footer">
-      <div class="primeira-secao">
-        <p class="footer-text-header">Imunização SEMSA</p>
-        <p>Dúvidas ou problemas? entre em contato.</p>
-        <p>imuniza@pmm.am.gov.b</p>
-        <div class="copyright">
+      <div class="footer-container">
+        <div class="primeira-secao">
+          <p class="footer-text-header">Endereço</p>
           <p>
-            © 2021 - Secretaria Municipal de Saúde - SEMSA Desenvolvido pelo
+            Avenida Mário Ypiranga Monteiro, 1695 - Adrianópolis Cep: 69057-001
           </p>
-          <p>Departamento de Tecnologia da Informação - DTI.</p>
+        </div>
+        <div class="segunda-secao">
+          <p class="footer-text-header">Link</p>
+          <p>
+            <a href="https://semsa.manaus.am.gov.br/"
+              >Secretaria Municipal de Saúde de Manaus</a
+            >
+          </p>
+          <p><a href="http://www.manaus.am.gov.br/">Prefeitura de Manaus</a></p>
         </div>
       </div>
-      <div class="segunda-secao">
-        <p class="footer-text-header">Endereço</p>
+      <div class="copyright">
         <p>
-          Avenida Mário Ypiranga Monteiro, 1695 - Adrianópolis Cep: 69057-001
+          © 2021 - Secretaria Municipal de Saúde - SEMSA Desenvolvido pelo
         </p>
-      </div>
-      <div class="terceira-secao">
-        <p class="footer-text-header">Link</p>
-        <p>
-          <a href="https://semsa.manaus.am.gov.br/"
-            >Secretaria Municipal de Saúde de Manaus</a
-          >
-        </p>
-        <p><a href="http://www.manaus.am.gov.br/">Prefeitura de Manaus</a></p>
+        <p>Departamento de Tecnologia da Informação - DTI.</p>
       </div>
     </div>
   </div>
 </template>
 <script>
 import { api } from "../services";
-import { isValidCPF } from "../helper";
+import { isValidCPF, currentDate } from "../helper";
 import Logo from "../assets/fullbrasao.png";
 import Swal from "sweetalert2";
 
@@ -207,7 +204,7 @@ export default {
       category_id: "",
       servicegroup_id: "",
       vaccinator_id: "",
-      application_date: "",
+      application_date: currentDate(),
       dose: 1,
       citizen: {
         cpf: "",
@@ -374,10 +371,11 @@ option {
 .footer {
   background-color: #005346;
   color: #f5f5f5;
-  display: flex;
-  flex-direction: row;
   row-gap: 3;
-  justify-content: space-around;
+  padding: 15px 10px 10px 5px;
+}
+.footer-container {
+  display: flex;
 }
 .footer-text-header {
   padding-top: 1rem;
@@ -462,6 +460,12 @@ button:active {
 }
 span {
   color: red;
+  font-size: 1.1rem;
+}
+.message {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-weight: bold;
   font-size: 1.1rem;
 }
 </style>

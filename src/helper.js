@@ -1,24 +1,17 @@
+import { validate } from "gerador-validador-cpf";
+
 const isValidCPF = (strCPF) => {
-  var Soma;
-  var Resto;
-  Soma = 0;
-  if (strCPF == "00000000000") return false;
-
-  for (let i = 1; i <= 9; i++)
-    Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (11 - i);
-  Resto = (Soma * 10) % 11;
-
-  if (Resto == 10 || Resto == 11) Resto = 0;
-  if (Resto != parseInt(strCPF.substring(9, 10))) return false;
-
-  Soma = 0;
-  for (let i = 1; i <= 10; i++)
-    Soma = Soma + parseInt(strCPF.substring(i - 1, i)) * (12 - i);
-  Resto = (Soma * 10) % 11;
-
-  if (Resto == 10 || Resto == 11) Resto = 0;
-  if (Resto != parseInt(strCPF.substring(10, 11))) return false;
-  return true;
+  return validate(strCPF);
 };
 
-export { isValidCPF };
+const currentDate = () => {
+  let today = new Date();
+  const dd = String(today.getDate()).padStart(2, "0");
+  const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  const yyyy = today.getFullYear();
+
+  today = yyyy + "-" + mm + "-" + dd;
+  return today;
+};
+
+export { isValidCPF, currentDate };
