@@ -54,7 +54,7 @@
       </div>
       <div class="box-form">
         <label for="dt_vacinacao"
-          >Data de nacimento do cidadão <span>*</span></label
+          >Data de nascimento do cidadão <span>*</span></label
         ><br />
         <input
           type="date"
@@ -145,11 +145,11 @@
           SALVAR
         </button>
         <br />
-        <div v-if="errors.length">
+        <div class="validation-errors" v-if="errors.length">
           <b>Por favor, corrija o(s) seguinte(s) erro(s):</b>
-          <ul>
+          <ol>
             <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
-          </ul>
+          </ol>
         </div>
         <div class="message">
           {{ message }}
@@ -241,7 +241,7 @@ export default {
           Swal.fire({
             icon: "error",
             title: "Erro ao cadastrar",
-            text: "Ocorreu algum erro. Por facor, tente novamente.",
+            text: "Ocorreu algum erro. Por favor, tente novamente.",
             showConfirmButton: false,
             timer: 2000,
           });
@@ -331,6 +331,7 @@ select {
   border: 1px solid black !important;
   outline: black;
   margin: 0.4rem 0rem 0.4rem 0rem;
+  min-width: 400px;
 }
 input {
   border-radius: 0.2rem !important;
@@ -391,11 +392,11 @@ a {
     font-size: 2em;
     text-align: center;
     padding: 1rem 2rem;
-    color: rgba(22, 22, 22, 0.884);
+    color: snow;
   }
 }
 .v-application--wrap {
-  background-color: rgb(217, 239, 237) !important;
+  background-color: #fff !important;
 }
 .btn-submit {
   padding: 0.2rem 1rem !important;
@@ -406,8 +407,8 @@ a {
   margin-top: 1rem;
 }
 .box-form {
-  width: 50%;
-  background-color: white;
+  width: 60%;
+  background-color: rgba(230, 236, 238, 0.52);
   margin: 1rem 0rem 1rem 0rem;
   border-radius: 0.2rem;
   // filter: drop-shadow(2px 2px 2px black);
@@ -442,5 +443,20 @@ button:active {
 
 .form {
   padding-left: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.validation-errors {
+  padding-top: 20px;
+  padding-bottom: 5px;
+}
+.validation-errors li {
+  padding-top: 5px;
+  color: red;
+}
+span {
+  color: red;
+  font-size: 1.1rem;
 }
 </style>
