@@ -21,13 +21,20 @@ export default {
   }, */
   data() {
     return {
-      loggedIn: localStorage.getItem("loggedIn"),
+      loggedIn: null,
     };
   },
   methods: {
     login(isLogged) {
       this.loggedIn = isLogged;
     },
+  },
+  created() {
+    if (localStorage.getItem("loggedIn") === "true") {
+      this.loggedIn = localStorage.getItem("loggedIn");
+    } else {
+      this.loggedIn = "false";
+    }
   },
 };
 </script>
