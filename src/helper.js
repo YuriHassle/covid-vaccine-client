@@ -14,4 +14,15 @@ const currentDate = () => {
   return today;
 };
 
-export { isValidCPF, currentDate };
+const validateLogin = ({ user, password }) => {
+  return user === "semsa" && password === "vacinacovid2021";
+};
+
+const formatDate = (dateStr) => {
+  const dd = dateStr.slice(0, 2);
+  const mm = dateStr.slice(3, 5);
+  const aaaa = dateStr.slice(6, 10);
+  return `${aaaa}-${mm}-${dd}`;
+};
+
+export { isValidCPF, currentDate, validateLogin, formatDate };

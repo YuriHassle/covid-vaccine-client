@@ -1,23 +1,21 @@
 <template>
-    <v-main>
-  <v-app data-app>
-        <Dashboard/>
-  </v-app>
-    </v-main>
+  <v-main>
+    <v-app data-app>
+      <Home />
+    </v-app>
+  </v-main>
 </template>
 
 <script>
-import Dashboard from "./components/Dashboard";
+import Home from "./views/Home";
 
 export default {
   name: "App",
 
   components: {
-    Dashboard,
+    Home,
   },
 
-  data: () => ({
-
-  }),
+  data: () => ({}),
 };
 </script>

@@ -26,23 +26,25 @@
         <br />
       </div>
       <div class="box-form">
-        <label for="cpf">CPF do cidadão (somente números) <span>*</span></label
+        <label for="cpf">CPF do cidadão <span>*</span></label
         ><br />
         <input
           type="number"
           name="cpf"
           v-model="application.citizen.cpf"
           v-mask="'###########'"
+          placeholder="somente números"
         />
         <br />
       </div>
       <div class="box-form">
-        <label for="cns">CNS do cidadão (somente números)</label><br />
+        <label for="cns">CNS do cidadão</label><br />
         <input
           type="number"
           name="cns"
           v-model="application.citizen.cns"
           v-mask="'XXXXXXXXXXXXXXX'"
+          placeholder="somente números"
         />
         <br />
       </div>
@@ -58,12 +60,12 @@
         <br />
       </div>
       <div class="box-form">
-        <label for="dt_vacinacao"
-          >Data de nascimento do cidadão <span>*</span></label
-        ><br />
+        <label for="dt_vacinacao">Data de nascimento do cidadão</label><br />
         <input
-          type="date"
+          type="text"
           name="bithday"
+          placeholder="somente números"
+          v-mask="'XX/XX/XXXX'"
           v-model="application.citizen.birthday"
         />
         <br />
@@ -101,6 +103,8 @@
         <input
           type="date"
           name="dt_vacinacao"
+          min="2021-01-19"
+          :max="today"
           v-model="application.application_date"
         />
         <br />
@@ -190,7 +194,7 @@
 </template>
 <script>
 import { api } from "../services";
-import { isValidCPF, currentDate } from "../helper";
+import { isValidCPF, currentDate, formatDate } from "../helper";
 import Logo from "../assets/fullbrasao.png";
 import Swal from "sweetalert2";
 
@@ -198,6 +202,7 @@ export default {
   name: "Dashboard",
 
   data: () => ({
+    today: currentDate(),
     application: {
       location_id: "",
       lot_id: "",
@@ -226,6 +231,10 @@ export default {
     saveApplication() {
       if (!this.isValidData()) return;
       this.message = "Enviando dados...";
+      this.application.citizen.birthday = formatDate(
+        this.application.citizen.birthday
+      );
+
       api
         .post("/applications", this.application)
         .then(() => {
@@ -256,10 +265,6 @@ export default {
         { name: "'sala de vacina'", value: this.application.location_id },
         { name: "'CPF do cidadão'", value: this.application.citizen.cpf },
         { name: "'nome do cidadão'", value: this.application.citizen.name },
-        {
-          name: "'data de nascimento do cidadão'",
-          value: this.application.citizen.birthday,
-        },
         { name: "'lote'", value: this.application.lot_id },
         { name: "'vacinador'", value: this.application.vaccinator_id },
         { name: "'grupo prioritário'", value: this.application.category_id },
@@ -273,6 +278,10 @@ export default {
         if (!field.value) {
           this.errors.push(`Preencha o campo ${field.name}`);
         }
+      }
+
+      if (this.application.citizen.birthday.length !== 10) {
+        this.errors.push("Informe um data de nascimento válida");
       }
 
       if (!isValidCPF(this.application.citizen.cpf)) {
