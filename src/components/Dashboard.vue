@@ -231,9 +231,11 @@ export default {
     saveApplication() {
       if (!this.isValidData()) return;
       this.message = "Enviando dados...";
-      this.application.citizen.birthday = formatDate(
-        this.application.citizen.birthday
-      );
+
+      const birthday = this.application.citizen.birthday;
+      if (birthday) {
+        this.application.citizen.birthday = formatDate(birthday);
+      }
 
       api
         .post("/applications", this.application)
@@ -280,7 +282,9 @@ export default {
         }
       }
 
-      if (this.application.citizen.birthday.length !== 10) {
+      const birthday = this.application.citizen.birthday;
+
+      if (birthday.length !== 10 && birthday !== "") {
         this.errors.push("Informe um data de nascimento válida");
       }
 

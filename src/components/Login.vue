@@ -21,6 +21,8 @@
 
 <script>
 import { validateLogin } from "../helper";
+import { api } from "../services";
+
 export default {
   name: "Login",
   data() {
@@ -35,9 +37,17 @@ export default {
   methods: {
     logar() {
       if (validateLogin(this.credentials)) {
-        localStorage.setItem("loggedIn", true);
-        const isLogged = localStorage.getItem("loggedIn");
-        this.$emit("login", isLogged);
+        const api_credentials = {
+          email: "imunizaapp@pmm.am.gov.br",
+          password: "vacinacovid123",
+        };
+
+        api.post("/login", api_credentials).then(({ data }) => {
+          localStorage.setItem("token", data.access_token);
+          localStorage.setItem("loggedIn", true);
+          const isLogged = localStorage.getItem("loggedIn");
+          this.$emit("login", isLogged);
+        });
       } else {
         this.message = "Credenciais inválidas!";
       }
