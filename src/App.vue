@@ -1,21 +1,28 @@
 <template>
-  <v-main>
-    <v-app data-app>
-      <Home />
-    </v-app>
-  </v-main>
+  <div id="app">
+    <Header />
+    <main id="main">
+      <transition mode="out-in">
+        <router-view />
+      </transition>
+    </main>
+    <Footer />
+  </div>
 </template>
 
 <script>
-import Home from "./views/Home";
+  import Header from '@/components/Header.vue';
+  import Footer from '@/components/Footer.vue';
 
-export default {
-  name: "App",
-
-  components: {
-    Home,
-  },
-
-  data: () => ({}),
-};
+  export default {
+    components: {
+      Header,
+      Footer
+    },
+    created() {
+      if (!localStorage.getItem('token')) {
+        this.$router.push('/login');
+      }
+    }
+  };
 </script>
