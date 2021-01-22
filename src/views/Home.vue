@@ -6,13 +6,13 @@
 </template>
 
 <script>
-import Login from "../components/Login";
-import Dashboard from "../components/Dashboard";
+import Login from '../components/Login';
+import Dashboard from '../components/Dashboard';
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
     Login,
-    Dashboard,
+    Dashboard
   },
   /*   computed: {
     loggedIn() {
@@ -21,21 +21,21 @@ export default {
   }, */
   data() {
     return {
-      loggedIn: null,
+      loggedIn: null
     };
   },
   methods: {
     login(isLogged) {
       this.loggedIn = isLogged;
-    },
-  },
-  created() {
-    if (localStorage.getItem("loggedIn") === "true") {
-      this.loggedIn = localStorage.getItem("loggedIn");
-    } else {
-      this.loggedIn = "false";
     }
   },
+  created() {
+    if (localStorage.getItem('loggedIn') === 'true') {
+      this.loggedIn = localStorage.getItem('loggedIn');
+    } else {
+      this.loggedIn = 'false';
+    }
+  }
 };
 </script>
 

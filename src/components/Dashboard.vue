@@ -34,7 +34,11 @@
           v-model="application.citizen.cpf"
           v-mask="'###########'"
           placeholder="somente números"
+          @focusout="validateCPF()"
         />
+        <div class="message">
+          {{ CPFValidationMsg }}
+        </div>
         <br />
       </div>
       <div class="box-form">
@@ -116,7 +120,7 @@
           class="select-form"
           v-model="application.category_id"
           name="grupo_prioritario"
-          @change="() => fetchServicegroups(application.category_id)"
+          @change="selectServiceGroup()"
         >
           <option
             v-for="category in categories"
@@ -139,7 +143,7 @@
           name="grupo_atendimento"
         >
           <option
-            v-for="servicegroup in servicegroups"
+            v-for="servicegroup in filteredServicegroups"
             :key="servicegroup.id"
             :value="servicegroup.id"
           >
@@ -193,70 +197,73 @@
   </div>
 </template>
 <script>
-import { api } from "../services";
-import { isValidCPF, currentDate, formatDate } from "../helper";
-import Logo from "../assets/fullbrasao.png";
-import Swal from "sweetalert2";
+import { api } from '../services';
+import { isValidCPF, currentDate, formatDate1, formatDate2 } from '../helper';
+import Logo from '../assets/fullbrasao.png';
+import Swal from 'sweetalert2';
 
 export default {
-  name: "Dashboard",
+  name: 'Dashboard',
 
   data: () => ({
     today: currentDate(),
+    CPFValidationMsg: '',
+    checkedCPF: false,
     application: {
-      location_id: "",
-      lot_id: "",
-      category_id: "",
-      servicegroup_id: "",
-      vaccinator_id: "",
+      location_id: '',
+      lot_id: '',
+      category_id: '',
+      servicegroup_id: '',
+      vaccinator_id: '',
       application_date: currentDate(),
       dose: 1,
       citizen: {
-        cpf: "",
-        cns: "",
-        name: "",
-        birthday: "",
-      },
+        cpf: '',
+        cns: '',
+        name: '',
+        birthday: ''
+      }
     },
     locations: null,
     categories: null,
     servicegroups: null,
+    filteredServicegroups: null,
     lots: null,
     vaccinators: null,
     message: null,
     Logo,
-    errors: [],
+    errors: []
   }),
   methods: {
     saveApplication() {
       if (!this.isValidData()) return;
-      this.message = "Enviando dados...";
+      this.message = 'Enviando dados...';
 
       const birthday = this.application.citizen.birthday;
       if (birthday) {
-        this.application.citizen.birthday = formatDate(birthday);
+        this.application.citizen.birthday = formatDate1(birthday);
       }
 
       api
-        .post("/applications", this.application)
+        .post('/applications', this.application)
         .then(() => {
-          this.message = "";
+          this.message = '';
           this.clearForm();
           Swal.fire({
-            icon: "success",
-            title: "Cadastrado com êxito",
-            text: "Os dados registrados com sucesso!",
+            icon: 'success',
+            title: 'Cadastrado com êxito',
+            text: 'Os dados registrados com sucesso!',
             showConfirmButton: false,
-            timer: 1500,
+            timer: 1500
           });
         })
         .catch(() => {
           Swal.fire({
-            icon: "error",
-            title: "Erro ao cadastrar",
-            text: "Ocorreu algum erro. Por favor, tente novamente.",
+            icon: 'error',
+            title: 'Erro ao cadastrar',
+            text: 'Ocorreu algum erro. Por favor, tente novamente.',
             showConfirmButton: false,
-            timer: 2000,
+            timer: 2000
           });
         });
     },
@@ -272,8 +279,8 @@ export default {
         { name: "'grupo prioritário'", value: this.application.category_id },
         {
           name: "'grupo de atendimento'",
-          value: this.application.servicegroup_id,
-        },
+          value: this.application.servicegroup_id
+        }
       ];
 
       for (const field of requiredFields) {
@@ -282,60 +289,89 @@ export default {
         }
       }
 
+      if (!this.checkedCPF) {
+        this.errors.push('Verifique a validade do CPF informado');
+      }
+
       const birthday = this.application.citizen.birthday;
 
-      if (birthday.length !== 10 && birthday !== "") {
-        this.errors.push("Informe um data de nascimento válida");
+      if (birthday.length !== 10 && birthday !== '') {
+        this.errors.push('Informe um data de nascimento válida');
       }
 
-      if (!isValidCPF(this.application.citizen.cpf)) {
-        this.errors.push("Informe um número de CPF válido");
+      return this.errors.length ? false : true;
+    },
+    selectServiceGroup() {
+      if (this.servicegroups) {
+        this.filteredServicegroups = this.servicegroups.filter(serviceGroup => {
+          return serviceGroup.category_id === this.application.category_id;
+        });
       }
-
-      const valid = !this.errors.length ? true : false;
-      return valid;
     },
     clearForm() {
-      this.application.lot_id = "";
-      this.application.category_id = "";
-      this.application.servicegroup_id = "";
-      this.application.citizen.cpf = "";
-      this.application.citizen.cns = "";
-      this.application.citizen.name = "";
-      this.application.citizen.birthday = "";
+      this.application.lot_id = '';
+      this.application.category_id = '';
+      this.application.servicegroup_id = '';
+      this.application.citizen.cpf = '';
+      this.application.citizen.cns = '';
+      this.application.citizen.name = '';
+      this.application.citizen.birthday = '';
     },
     fetchVaccinators() {
-      api.get("/vaccinators").then(({ data }) => {
+      api.get('/vaccinators').then(({ data }) => {
         this.vaccinators = data.data;
       });
     },
     fetchLocations() {
-      api.get("/locations").then(({ data }) => {
+      api.get('/locations').then(({ data }) => {
         this.locations = data.data;
       });
     },
     fetchCategories() {
-      api.get("/categories").then(({ data }) => {
+      api.get('/categories').then(({ data }) => {
         this.categories = data.data;
       });
     },
-    fetchServicegroups(category_id) {
-      api.get(`/servicegroups?category_id=${category_id}`).then(({ data }) => {
+    fetchServicegroups() {
+      api.get('/servicegroups').then(({ data }) => {
         this.servicegroups = data.data;
       });
     },
     fetchLots() {
-      api.get("/lots").then(({ data }) => {
+      api.get('/lots').then(({ data }) => {
         this.lots = data.data;
       });
     },
+    validateCPF() {
+      const cpf = this.application.citizen.cpf;
+      if (cpf.length !== 0) {
+        this.CPFValidationMsg = 'Verificando CPF...';
+
+        if (!isValidCPF(cpf)) {
+          this.CPFValidationMsg = 'CPF inválido: número de CPF inexistente';
+        } else {
+          api.get(`/applications?cpf=${cpf}`).then(({ data }) => {
+            if (data.data.length !== 0) {
+              const formattedDate = formatDate2(data.data[0].application_date);
+              this.CPFValidationMsg = `CPF inválido: o portador do CPF ${cpf} já foi vacinado em ${formattedDate}`;
+            } else {
+              this.checkedCPF = true;
+              this.CPFValidationMsg = 'CPF válido!';
+            }
+          });
+        }
+      } else {
+        this.CPFValidationMsg = 'O campo CPF é obrigatório';
+      }
+    }
   },
   created() {
     this.fetchVaccinators();
     this.fetchLocations();
     this.fetchCategories();
+    this.fetchServicegroups();
     this.fetchLots();
-  },
+  }
 };
 </script>
 
@@ -346,7 +382,7 @@ select {
   border: 1px solid black !important;
   outline: black;
   margin: 0.4rem 0rem 0.4rem 0rem;
-  min-width: 300px;
+  min-width: 320px;
 }
 input {
   border-radius: 0.2rem !important;
@@ -362,7 +398,7 @@ select {
 }
 label,
 option {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 1em;
 }
 .header {
@@ -404,7 +440,7 @@ a {
 .text-header {
   background-color: #005346;
   p {
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: bold;
     font-size: 2em;
     text-align: center;

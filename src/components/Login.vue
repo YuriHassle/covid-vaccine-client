@@ -20,42 +20,42 @@
 </template>
 
 <script>
-import { validateLogin } from "../helper";
-import { api } from "../services";
+import { validateLogin } from '../helper';
+import { api } from '../services';
 
 export default {
-  name: "Login",
+  name: 'Login',
   data() {
     return {
-      message: "",
+      message: '',
       credentials: {
-        user: "",
-        password: "",
-      },
+        user: '',
+        password: ''
+      }
     };
   },
   methods: {
     logar() {
       if (validateLogin(this.credentials)) {
         const api_credentials = {
-          email: "imunizaapp@pmm.am.gov.br",
-          password: "vacinacovid123",
+          email: 'imunizaapp@pmm.am.gov.br',
+          password: 'vacinacovid123'
         };
 
-        api.post("/login", api_credentials).then(({ data }) => {
-          localStorage.setItem("token", data.access_token);
-          localStorage.setItem("loggedIn", true);
-          const isLogged = localStorage.getItem("loggedIn");
-          this.$emit("login", isLogged);
+        api.post('/login', api_credentials).then(({ data }) => {
+          localStorage.setItem('token', data.access_token);
+          localStorage.setItem('loggedIn', true);
+          const isLogged = localStorage.getItem('loggedIn');
+          this.$emit('login', isLogged);
         });
       } else {
-        this.message = "Credenciais inválidas!";
+        this.message = 'Credenciais inválidas!';
       }
-    },
+    }
   },
   created() {
-    localStorage.setItem("loggedIn", false);
-  },
+    localStorage.setItem('loggedIn', false);
+  }
 };
 </script>
 
