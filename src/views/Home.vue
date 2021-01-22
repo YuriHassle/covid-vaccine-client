@@ -11,7 +11,8 @@
             v-model="application.citizen.cpf"
             minlength="11"
             maxlength="11"
-            pattern="\d*"
+            pattern="[0-9]*"
+            inputmode="numeric"
             placeholder="somente números"
             @focusout="validateCPF()"
           />
@@ -26,7 +27,8 @@
             v-model="application.citizen.cns"
             minlength="15"
             maxlength="15"
-            pattern="\d*"
+            pattern="[0-9]*"
+            inputmode="numeric"
             placeholder="somente números"
           />
         </FormField>

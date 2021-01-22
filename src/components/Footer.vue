@@ -51,14 +51,18 @@
     align-items: flex-start;
     justify-content: space-evenly;
   }
+  .footer-section {
+    padding: 20px 20px;
+  }
   @media screen and (max-width: 500px) {
     .footer-container {
       flex-direction: column;
     }
+    .footer-section {
+      padding: 10px 10px;
+    }
   }
-  .footer-section {
-    padding: 20px 20px;
-  }
+
   h3 {
     margin-bottom: 10px;
   }
