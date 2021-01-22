@@ -76,19 +76,7 @@
   .btn {
     padding: 0.2rem 1rem !important;
     border-radius: 0.4rem;
-    background-color: rgb(226, 241, 229);
-    color: rgb(0, 150, 136) !important;
     border: none !important;
     margin-top: 1rem;
-  }
-
-  .perdeu {
-    text-align: center;
-    margin: 20px auto 0 auto;
-  }
-
-  .perdeu a:hover {
-    color: #87f;
-    text-decoration: underline;
   }
 </style>

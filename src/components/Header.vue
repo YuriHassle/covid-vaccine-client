@@ -1,16 +1,34 @@
 <template>
-  <section>
+  <header>
     <div class="header">
       <img src="../assets/fullbrasao.png" alt="PREFEITURA DE MANAUS  - SEMSA" />
     </div>
     <div class="text-header">
-      <p>Vacinação COVID-19, SEMSA MANAUS</p>
+      <p>VACINAÇÃO COVID19 - SEMSA MANAUS</p>
     </div>
-  </section>
+  </header>
 </template>
 
 <script>
   export default {};
 </script>
 
-<style></style>
+<style scoped lang="scss">
+  .header {
+    display: flex;
+    padding: 1rem;
+    background-color: #005346;
+    justify-content: center;
+  }
+  .text-header {
+    background-color: #005346;
+    p {
+      font-family: 'Roboto', sans-serif;
+      font-weight: bold;
+      font-size: 2em;
+      text-align: center;
+      padding: 1rem 2rem;
+      color: snow;
+    }
+  }
+</style>

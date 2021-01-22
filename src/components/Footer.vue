@@ -1,5 +1,5 @@
 <template>
-  <section class="footer">
+  <footer class="footer">
     <div class="footer-container">
       <div class="primeira-secao">
         <p class="footer-text-header">Endereço</p>
@@ -23,11 +23,38 @@
       </p>
       <p>Departamento de Tecnologia da Informação - DTI.</p>
     </div>
-  </section>
+  </footer>
 </template>
 
 <script>
   export default {};
 </script>
 
-<style></style>
+<style scoped lang="scss">
+  .copyright {
+    background-color: #005346;
+    p {
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 0px !important;
+    }
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .footer {
+    background-color: #005346;
+    color: #f5f5f5;
+    row-gap: 3;
+    padding: 15px 10px 10px 5px;
+  }
+  .footer-container {
+    display: flex;
+  }
+  .footer-text-header {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-bottom: 0px !important;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+</style>

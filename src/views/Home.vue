@@ -1,158 +1,146 @@
 <template>
-  <div class="entire-div">
-    <div class="form">
-      <button class="logout" @click.prevent="logout">Deslogar</button>
-      <div class="box-form">
-        <label for="location">Sala de vacina (local) <span>*</span></label>
-        <br />
-        <select
-          class="select-form"
-          name="location"
-          v-model="application.location_id"
-        >
-          <option
-            v-for="location in locations"
-            :key="location.id"
-            :value="location.id"
+  <section>
+    <button class="btn" @click.prevent="logout">Deslogar</button>
+    <form>
+      <div class="fields-container">
+        <h3>Dados do cidadão</h3>
+        <FormField label="CPF" :required="true" name="cpf">
+          <input
+            type="text"
+            name="cpf"
+            v-model="application.citizen.cpf"
+            minlength="11"
+            maxlength="11"
+            pattern="\d*"
+            placeholder="somente números"
+            @focusout="validateCPF()"
+          />
+          <div v-if="CPFValidationMsg" class="message">
+            {{ CPFValidationMsg }}
+          </div>
+        </FormField>
+        <FormField label="CNS" name="cns">
+          <input
+            type="text"
+            name="cns"
+            v-model="application.citizen.cns"
+            minlength="15"
+            maxlength="15"
+            pattern="\d*"
+            placeholder="somente números"
+          />
+        </FormField>
+        <FormField label="Nome" :required="true" name="name">
+          <input
+            type="text"
+            name="name"
+            v-model="application.citizen.name"
+            minlength="9"
+            maxlength="45"
+          />
+        </FormField>
+        <FormField label="Data de Nascimento" name="birthday">
+          <input
+            type="text"
+            name="birthday"
+            placeholder="somente números"
+            v-mask="'XX/XX/XXXX'"
+            v-model="application.citizen.birthday"
+          />
+        </FormField>
+        <FormField label="Grupo prioritário" :required="true" name="category">
+          <select
+            class="select-form"
+            v-model="application.category_id"
+            name="category"
+            @change="selectServiceGroup()"
           >
-            {{ location.name }}
-          </option>
-        </select>
-        <br />
-      </div>
-      <div class="box-form">
-        <label for="cpf">CPF do cidadão <span>*</span></label
-        ><br />
-        <input
-          type="number"
-          name="cpf"
-          v-model="application.citizen.cpf"
-          v-mask="'###########'"
-          placeholder="somente números"
-          @focusout="validateCPF()"
-        />
-        <div class="message">
-          {{ CPFValidationMsg }}
-        </div>
-        <br />
-      </div>
-      <div class="box-form">
-        <label for="cns">CNS do cidadão</label><br />
-        <input
-          type="number"
-          name="cns"
-          v-model="application.citizen.cns"
-          v-mask="'XXXXXXXXXXXXXXX'"
-          placeholder="somente números"
-        />
-        <br />
-      </div>
-      <div class="box-form">
-        <label for="nome">Nome do cidadão <span>*</span></label
-        ><br />
-        <input
-          type="text"
-          name="nome"
-          v-model="application.citizen.name"
-          v-mask="'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'"
-        />
-        <br />
-      </div>
-      <div class="box-form">
-        <label for="dt_vacinacao">Data de nascimento do cidadão</label><br />
-        <input
-          type="text"
-          name="bithday"
-          placeholder="somente números"
-          v-mask="'XX/XX/XXXX'"
-          v-model="application.citizen.birthday"
-        />
-        <br />
-      </div>
-      <div class="box-form">
-        <label for="lot">Lote <span>*</span></label> <br />
-        <select class="select-form" name="lot" v-model="application.lot_id">
-          <option v-for="lot in lots" :key="lot.id" :value="lot.id">
-            {{ lot.name }}
-          </option>
-        </select>
-        <br />
-      </div>
-      <div class="box-form">
-        <label for="vaccinator">Vacinador <span>*</span></label
-        ><br />
-        <select
-          class="select-form"
-          name="vaccinator"
-          v-model="application.vaccinator_id"
+            <option
+              v-for="category in categories"
+              :key="category.id"
+              :value="category.id"
+            >
+              {{ category.name }}
+            </option>
+          </select>
+        </FormField>
+        <FormField
+          label="Grupo de atendimento"
+          :required="true"
+          name="service-group"
         >
-          <option
-            v-for="vaccinator in vaccinators"
-            :value="vaccinator.id"
-            :key="vaccinator.id"
+          <select
+            class="select-form"
+            v-model="application.servicegroup_id"
+            name="service-group"
           >
-            {{ vaccinator.name }}
-          </option></select
-        ><br />
+            <option
+              v-for="servicegroup in filteredServicegroups"
+              :key="servicegroup.id"
+              :value="servicegroup.id"
+            >
+              {{ servicegroup.name }}
+            </option>
+          </select>
+        </FormField>
       </div>
-
-      <div class="box-form">
-        <label for="dt_vacinacao">Data da vacinação <span>*</span></label
-        ><br />
-        <input
-          type="date"
-          name="dt_vacinacao"
-          min="2021-01-19"
-          :max="today"
-          v-model="application.application_date"
-        />
-        <br />
-      </div>
-      <div class="box-form">
-        <label for="grupo_prioriario">Grupo prioritário <span>*</span></label>
-        <br />
-        <select
-          class="select-form"
-          v-model="application.category_id"
-          name="grupo_prioritario"
-          @change="selectServiceGroup()"
-        >
-          <option
-            v-for="category in categories"
-            :key="category.id"
-            :value="category.id"
+      <div class="fields-container">
+        <h3>Dados da vacina</h3>
+        <FormField label="Local" :required="true" name="location">
+          <select
+            class="select-form"
+            name="location"
+            v-model="application.location_id"
           >
-            {{ category.name }}
-          </option>
-        </select>
-        <br />
-      </div>
-      <div class="box-form">
-        <label for="grupo_atendimento"
-          >Grupo de atendimento <span>*</span></label
-        >
-        <br />
-        <select
-          class="select-form"
-          v-model="application.servicegroup_id"
-          name="grupo_atendimento"
-        >
-          <option
-            v-for="servicegroup in filteredServicegroups"
-            :key="servicegroup.id"
-            :value="servicegroup.id"
+            <option
+              v-for="location in locations"
+              :key="location.id"
+              :value="location.id"
+            >
+              {{ location.name }}
+            </option>
+          </select>
+        </FormField>
+        <FormField label="Vacinador" :required="true" name="vaccinator">
+          <select
+            class="select-form"
+            name="vaccinator"
+            v-model="application.vaccinator_id"
           >
-            {{ servicegroup.name }}
-          </option>
-        </select>
-        <br />
+            <option
+              v-for="vaccinator in vaccinators"
+              :value="vaccinator.id"
+              :key="vaccinator.id"
+            >
+              {{ vaccinator.name }}
+            </option>
+          </select>
+        </FormField>
+        <FormField label="Lote" :required="true" name="lot">
+          <select class="select-form" name="lot" v-model="application.lot_id">
+            <option v-for="lot in lots" :key="lot.id" :value="lot.id">
+              {{ lot.name }}
+            </option>
+          </select>
+        </FormField>
+        <FormField
+          label="Data de vacinação"
+          :required="true"
+          name="application-date"
+        >
+          <input
+            type="date"
+            name="application-date"
+            min="2021-01-19"
+            :max="today"
+            v-model="application.application_date"
+          />
+        </FormField>
       </div>
-      <br />
       <div style="margin-bottom: 1.5rem">
-        <button class="button save" @click.prevent="saveApplication">
-          SALVAR
+        <button class="btn" @click.prevent="saveApplication">
+          Salvar
         </button>
-        <br />
         <div class="validation-errors" v-if="errors.length">
           <b>Por favor, corrija o(s) seguinte(s) erro(s):</b>
           <ol>
@@ -163,17 +151,18 @@
           {{ message }}
         </div>
       </div>
-    </div>
-  </div>
+    </form>
+  </section>
 </template>
 <script>
   import { api } from '../services';
   import { isValidCPF, currentDate, formatDate1, formatDate2 } from '../helper';
   import Swal from 'sweetalert2';
+  import FormField from '../components/FormField';
 
   export default {
     name: 'Home',
-    components: {},
+    components: { FormField },
     data: () => ({
       today: currentDate(),
       CPFValidationMsg: '',
@@ -262,9 +251,18 @@
         }
 
         const birthday = this.application.citizen.birthday;
-
         if (birthday.length !== 10 && birthday !== '') {
           this.errors.push('Informe um data de nascimento válida');
+        }
+
+        const name = this.application.citizen.name;
+        if (name.length < 9 && name !== '') {
+          this.errors.push('Informe um nome com no mínimo 9 caracteres');
+        }
+
+        const cns = this.application.citizen.cns;
+        if (cns.length !== 15 && cns !== '') {
+          this.errors.push('Informe um CNS com 15 caracteres');
         }
 
         return this.errors.length ? false : true;
@@ -322,7 +320,7 @@
           this.CPFValidationMsg = 'Verificando CPF...';
 
           if (!isValidCPF(cpf)) {
-            this.CPFValidationMsg = 'CPF inválido: número de CPF inexistente';
+            this.CPFValidationMsg = 'CPF inválido: número inexistente';
           } else {
             api.get(`/applications?cpf=${cpf}`).then(({ data }) => {
               if (data.data.length !== 0) {
@@ -351,129 +349,13 @@
   };
 </script>
 
-<style lang="scss">
-  input,
-  select {
-    padding: 0.1rem 0.3rem 0.2rem;
-    border: 1px solid black !important;
-    outline: black;
-    margin: 0.4rem 0rem 0.4rem 0rem;
-    min-width: 320px;
+<style scoped lang="scss">
+  form {
+    padding: 10px 20px;
   }
-  input {
-    border-radius: 0.2rem !important;
-  }
-
-  select {
-    padding: 0.4rem 0.4rem 0.5rem;
-    border-radius: 0.4rem;
-    background-color: white !important;
-    -webkit-appearance: menulist !important; /* override vuetify style */
-    -moze-appearance: menulist !important; /* override vuetify style */
-    appearance: menulist !important; /* override vuetify style */
-  }
-  label,
-  option {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1em;
-  }
-  .header {
-    display: flex;
-    padding: 1rem;
-    background-color: #005346;
-    justify-content: center;
-  }
-  .copyright {
-    background-color: #005346;
-    p {
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 0px !important;
-    }
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .footer {
-    background-color: #005346;
-    color: #f5f5f5;
-    row-gap: 3;
-    padding: 15px 10px 10px 5px;
-  }
-  .footer-container {
-    display: flex;
-  }
-  .footer-text-header {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    margin-bottom: 0px !important;
-    font-weight: bold;
-    font-size: 1.2em;
-  }
-  a {
-    text-decoration: none;
-    color: #f5f5f5 !important;
-  }
-  .text-header {
-    background-color: #005346;
-    p {
-      font-family: 'Roboto', sans-serif;
-      font-weight: bold;
-      font-size: 2em;
-      text-align: center;
-      padding: 1rem 2rem;
-      color: snow;
-    }
-  }
-  .v-application--wrap {
-    background-color: #fff !important;
-  }
-  .btn-submit {
-    padding: 0.2rem 1rem !important;
-    border-radius: 0.4rem;
-    background-color: white;
-    color: rgb(0, 150, 136) !important;
-    border: none !important;
-    margin-top: 1rem;
-  }
-  .box-form {
-    background-color: rgba(230, 236, 238, 0.52);
-    margin: 1rem 0rem 1rem 0rem;
-    border-radius: 0.2rem;
-    // filter: drop-shadow(2px 2px 2px black);
-    padding: 0.4rem 4rem 0.4rem 1rem;
-  }
-  .button {
-    border: 1px solid black;
-    padding: 0.2rem 2rem;
-    border-radius: 0.4rem;
-    color: #009aa0;
-  }
-  .save {
-    background-color: snow;
-    outline: none;
-  }
-  .clean {
-    background-color: transparent;
-    border: none;
-  }
-
-  button:hover {
-    transform: translate(0px, -1px);
-    box-shadow: 0px 1px 10px 0px #00000011;
-    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
-  }
-
-  button:active {
-    outline: none;
-    transform: translate(0px, 1px);
-    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
-  }
-
-  .form {
-    padding-left: 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+  h3 {
+    padding-top: 20px;
+    padding-left: 20px;
   }
   .validation-errors {
     padding-top: 20px;
@@ -483,14 +365,15 @@
     padding-top: 5px;
     color: red;
   }
-  span {
-    color: red;
-    font-size: 1.1rem;
+  .fields-container {
+    background-color: rgba(237, 244, 245, 0.972);
   }
-  .message {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-weight: bold;
-    font-size: 1.1rem;
+  .fields-container:first-child {
+    margin-bottom: 40px;
+  }
+  .btn {
+    margin: auto;
+    margin-top: 20px;
+    margin-bottom: 10px;
   }
 </style>
