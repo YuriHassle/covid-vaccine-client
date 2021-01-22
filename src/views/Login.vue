@@ -2,13 +2,13 @@
   <section class="login">
     <h1>Login</h1>
     <form>
-      <label for="email">Usuário</label>
-      <input type="email" name="email" id="email" v-model="credentials.user" />
-      <label for="senha">Senha</label>
+      <label for="user">Usuário</label>
+      <input type="text" name="user" id="user" v-model="credentials.user" />
+      <label for="password">Senha</label>
       <input
         type="password"
-        name="senha"
-        id="senha"
+        name="password"
+        id="password"
         v-model="credentials.password"
       />
       <button class="btn" @click.prevent="logar">Logar</button>
