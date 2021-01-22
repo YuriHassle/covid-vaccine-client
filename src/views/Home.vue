@@ -47,6 +47,8 @@
             name="birthday"
             placeholder="somente números"
             v-mask="'XX/XX/XXXX'"
+            pattern="[0-9]*"
+            inputmode="numeric"
             v-model="application.citizen.birthday"
           />
         </FormField>
@@ -207,6 +209,7 @@
           .post('/applications', this.application)
           .then(() => {
             this.message = '';
+            this.CPFValidationMsg = '';
             this.clearForm();
             Swal.fire({
               icon: 'success',

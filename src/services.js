@@ -3,8 +3,8 @@ import Swal from 'sweetalert2';
 import router from './router';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://covid-vaccine-server.herokuapp.com/api'
-  //baseURL: "https://imuniza.manaus.am.gov.br/api",
+  //baseURL: 'https://covid-vaccine-server.herokuapp.com/api'
+  baseURL: 'https://imuniza.manaus.am.gov.br/api'
   //baseURL: 'http://localhost:8000/api'
 });
 
