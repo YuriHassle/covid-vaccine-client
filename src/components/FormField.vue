@@ -35,7 +35,6 @@
   }
   .box-form {
     border-radius: 5px;
-    width: 500px;
     padding: 8px 30px;
     margin-bottom: 4px;
   }

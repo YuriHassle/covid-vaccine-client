@@ -352,6 +352,8 @@
 <style scoped lang="scss">
   form {
     padding: 10px 20px;
+    max-width: 100vw;
+    min-width: 60vw;
   }
   h3 {
     padding-top: 20px;
@@ -366,6 +368,8 @@
     color: red;
   }
   .fields-container {
+    display: flex;
+    flex-direction: column;
     background-color: rgba(237, 244, 245, 0.972);
   }
   .fields-container:first-child {

@@ -1,14 +1,14 @@
 <template>
-  <footer class="footer">
+  <footer>
     <div class="footer-container">
-      <div class="primeira-secao">
-        <p class="footer-text-header">Endereço</p>
+      <div class="footer-section">
+        <h3>Endereço</h3>
         <p>
           Avenida Mário Ypiranga Monteiro, 1695 - Adrianópolis Cep: 69057-001
         </p>
       </div>
-      <div class="segunda-secao">
-        <p class="footer-text-header">Link</p>
+      <div class="footer-section">
+        <h3>Link</h3>
         <p>
           <a href="https://semsa.manaus.am.gov.br/"
             >Secretaria Municipal de Saúde de Manaus</a
@@ -31,30 +31,35 @@
 </script>
 
 <style scoped lang="scss">
+  p {
+    margin-bottom: 5px;
+  }
   .copyright {
-    background-color: #005346;
     p {
       color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 0px !important;
     }
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    background-color: #005346;
+    margin-left: 20px;
   }
-  .footer {
+  footer {
     background-color: #005346;
     color: #f5f5f5;
-    row-gap: 3;
     padding: 15px 10px 10px 5px;
   }
   .footer-container {
     display: flex;
+    align-items: flex-start;
+    justify-content: space-evenly;
   }
-  .footer-text-header {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    margin-bottom: 0px !important;
-    font-weight: bold;
-    font-size: 1.2em;
+  @media screen and (max-width: 500px) {
+    .footer-container {
+      flex-direction: column;
+    }
+  }
+  .footer-section {
+    padding: 20px 20px;
+  }
+  h3 {
+    margin-bottom: 10px;
   }
 </style>
