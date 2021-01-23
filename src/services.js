@@ -4,16 +4,29 @@ import router from './router';
 
 const axiosInstance = axios.create({
   //baseURL: 'https://covid-vaccine-server.herokuapp.com/api'
-  baseURL: 'https://imuniza.manaus.am.gov.br/api'
-  //baseURL: 'http://localhost:8000/api'
+  //baseURL: 'https://imuniza.manaus.am.gov.br/api'
+  baseURL: 'http://localhost:8000/api'
 });
 
 axiosInstance.interceptors.request.use(
-  function(config) {
+  request => {
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    } else if (router.history.current.name !== 'login') {
+      request.headers.Authorization = `Bearer ${token}`;
+    }
+    return request;
+  },
+  error => {
+    return Promise.reject(error);
+  }
+);
+
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    console.log(error.response);
+    if (error.response.status === 401) {
+      console.log('entrou');
       Swal.fire({
         icon: 'info',
         title: 'Sessão expirada',
@@ -22,12 +35,9 @@ axiosInstance.interceptors.request.use(
         showConfirmButton: false,
         timer: 2500
       }).then(() => {
-        router.push('/login');
+        router.push({ name: 'login' });
       });
     }
-    return config;
-  },
-  function(error) {
     return Promise.reject(error);
   }
 );

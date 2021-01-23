@@ -327,17 +327,23 @@
           if (!isValidCPF(cpf)) {
             this.CPFValidationMsg = 'CPF inválido: número inexistente';
           } else {
-            api.get(`/applications?cpf=${cpf}`).then(({ data }) => {
-              if (data.data.length !== 0) {
-                const formattedDate = formatDate2(
-                  data.data[0].application_date
-                );
-                this.CPFValidationMsg = `CPF inválido: o portador do CPF ${cpf} já foi vacinado em ${formattedDate}`;
-              } else {
-                this.checkedCPF = true;
-                this.CPFValidationMsg = 'CPF válido!';
-              }
-            });
+            api
+              .get(`/applications?cpf=${cpf}`)
+              .then(({ data }) => {
+                if (data.data.length !== 0) {
+                  const formattedDate = formatDate2(
+                    data.data[0].application_date
+                  );
+                  this.CPFValidationMsg = `CPF inválido: o portador do CPF ${cpf} já foi vacinado em ${formattedDate}`;
+                } else {
+                  this.checkedCPF = true;
+                  this.CPFValidationMsg = 'CPF válido!';
+                }
+              })
+              .catch(() => {
+                this.CPFValidationMsg =
+                  'Não foi possível consultar o CPF. Favor recarregar a página e tentar novamente.';
+              });
           }
         } else {
           this.CPFValidationMsg = 'O campo CPF é obrigatório';

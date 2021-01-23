@@ -1,9 +1,9 @@
 <template>
   <section class="login">
-    <h1>Login</h1>
+    <h1>Entrar</h1>
     <form>
-      <label for="user">Usuário</label>
-      <input type="text" name="user" id="user" v-model="credentials.user" />
+      <label for="user">CPF</label>
+      <input type="text" name="user" id="user" v-model="credentials.cpf" />
       <label for="password">Senha</label>
       <input
         type="password"
@@ -11,7 +11,7 @@
         id="password"
         v-model="credentials.password"
       />
-      <button class="btn" @click.prevent="logar">Logar</button>
+      <button class="btn" @click.prevent="login">Logar</button>
       <div class="message">
         {{ message }}
       </div>
@@ -20,48 +20,38 @@
 </template>
 
 <script>
-  import { validateLogin } from '../helper';
-  import { api } from '../services';
-
   export default {
     name: 'Login',
     data() {
       return {
         message: '',
         credentials: {
-          user: '',
+          cpf: '',
           password: ''
         }
       };
     },
     methods: {
-      logar() {
+      login() {
         this.message = 'Verificando credenciais...';
-        if (validateLogin(this.credentials)) {
-          const api_credentials = {
-            email: 'imunizaapp@pmm.am.gov.br',
-            password: 'vacinacovid123'
-          };
-
-          api.post('/login', api_credentials).then(({ data }) => {
-            localStorage.setItem('token', data.access_token);
-            this.$router.push('/');
+        this.$store
+          .dispatch('login', this.credentials)
+          .then(data => {
+            if (data.data) {
+              this.$router.push({ name: 'home' });
+            } else {
+              this.message = 'Credenciais inválidas!';
+            }
+          })
+          .catch(() => {
+            this.message = 'Não foi possível se conectar com o servidor :(';
           });
-        } else {
-          this.message = 'Credenciais inválidas!';
-        }
       }
     }
   };
 </script>
 
 <style scoped>
-  .login {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 0 20px;
-  }
-
   h1 {
     text-align: center;
     font-size: 2rem;
@@ -69,8 +59,14 @@
     color: #87f;
   }
 
+  .login {
+    min-height: 50vh;
+    padding: 10px 20px;
+  }
+
   form {
     display: grid;
+    min-width: 30vw;
   }
 
   .btn {
@@ -78,5 +74,6 @@
     border-radius: 0.4rem;
     border: none !important;
     margin-top: 1rem;
+    height: 30px;
   }
 </style>

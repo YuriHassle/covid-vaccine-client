@@ -20,7 +20,10 @@
       Footer
     },
     created() {
-      if (!localStorage.getItem('token')) {
+      if (
+        !localStorage.getItem('token') &&
+        this.$router.history.current.name !== 'login'
+      ) {
         this.$router.push('/login');
       }
     }
@@ -135,11 +138,12 @@
     border: 2px solid rgb(249, 255, 172);
   }
   .message {
-    padding-top: 10px;
+    padding-top: 15px;
     padding-bottom: 10px;
     font-weight: 400;
     font-size: 1rem;
     color: #65d;
+    margin: auto;
   }
 
   .v-enter,
