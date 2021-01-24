@@ -47,7 +47,6 @@
             name="birthday"
             placeholder="somente números"
             v-mask="'XX/XX/XXXX'"
-            pattern="[0-9]*"
             inputmode="numeric"
             v-model="application.citizen.birthday"
           />
@@ -172,12 +171,13 @@
       CPFValidationMsg: '',
       checkedCPF: false,
       application: {
+        user_id: '',
         location_id: '',
         lot_id: '',
         category_id: '',
         servicegroup_id: '',
         vaccinator_id: '',
-        application_date: currentDate(),
+        application_date: '',
         dose: 1,
         citizen: {
           cpf: '',
@@ -205,6 +205,8 @@
           this.application.citizen.birthday = formatDate1(birthday);
         }
 
+        this.application.user_id = this.$store.state.user.id;
+        console.log(this.$store.state.user);
         api
           .post('/applications', this.application)
           .then(() => {
@@ -282,8 +284,8 @@
         }
       },
       logout() {
-        localStorage.removeItem('token');
-        this.$router.push('/login');
+        this.$store.dispatch('logout');
+        this.$router.push({ name: 'login' });
       },
       clearForm() {
         this.application.lot_id = '';

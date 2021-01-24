@@ -37,6 +37,7 @@ router.beforeEach((to, from, next) => {
         showConfirmButton: false,
         timer: 2500
       }).then(() => {
+        this.$store.dispatch('logout');
         next('/login');
       });
     } else {

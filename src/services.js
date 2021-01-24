@@ -35,6 +35,7 @@ axiosInstance.interceptors.response.use(
         showConfirmButton: false,
         timer: 2500
       }).then(() => {
+        this.$store.dispatch('logout');
         router.push({ name: 'login' });
       });
     }

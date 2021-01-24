@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   strict: true,
   state: {
-    usuario: {
+    user: {
       id: '',
       cpf: '',
       name: '',
@@ -15,7 +15,7 @@ export default new Vuex.Store({
   },
   mutations: {
     UPDATE_USER(state, payload) {
-      state.usuario = Object.assign(state.usuario, payload);
+      state.user = Object.assign(state.user, payload);
     }
   },
   actions: {
@@ -35,7 +35,9 @@ export default new Vuex.Store({
         name: '',
         email: ''
       });
-      window.localStorage.removeItem('token');
+      if (localStorage.getItem('token')) {
+        window.localStorage.removeItem('token');
+      }
     }
   }
 });
