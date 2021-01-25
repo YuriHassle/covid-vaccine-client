@@ -222,6 +222,7 @@
             });
           })
           .catch(() => {
+            this.message = '';
             Swal.fire({
               icon: 'error',
               title: 'Erro ao cadastrar',
@@ -243,6 +244,10 @@
           { name: "'grupo prioritário'", value: this.application.category_id },
           {
             name: "'grupo de atendimento'",
+            value: this.application.application_date
+          },
+          {
+            name: "'data de vacinação'",
             value: this.application.servicegroup_id
           }
         ];
