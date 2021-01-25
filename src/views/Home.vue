@@ -206,7 +206,6 @@
         }
 
         this.application.user_id = this.$store.state.user.id;
-        console.log(this.$store.state.user);
         api
           .post('/applications', this.application)
           .then(() => {
@@ -244,11 +243,11 @@
           { name: "'grupo prioritário'", value: this.application.category_id },
           {
             name: "'grupo de atendimento'",
-            value: this.application.application_date
+            value: this.application.servicegroup_id
           },
           {
             name: "'data de vacinação'",
-            value: this.application.servicegroup_id
+            value: this.application.application_date
           }
         ];
 

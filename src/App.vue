@@ -20,11 +20,15 @@
       Footer
     },
     created() {
-      if (
+      if (localStorage.getItem('token')) {
+        this.$store.dispatch('getUser').then(() => {
+          console.log(this.$store.state.user);
+        });
+      } else if (
         !localStorage.getItem('token') &&
         this.$router.history.current.name !== 'login'
       ) {
-        this.$router.push('/login');
+        this.$router.push({ name: 'login' });
       }
     }
   };

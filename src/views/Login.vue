@@ -37,7 +37,6 @@
         this.$store
           .dispatch('login', this.credentials)
           .then(data => {
-            console.log(data.data);
             if (data.data.successful_login) {
               this.$router.push({ name: 'home' });
             } else {

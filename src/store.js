@@ -21,7 +21,7 @@ export default new Vuex.Store({
   actions: {
     login(context, payload) {
       return api.post('/login', payload).then(({ data }) => {
-        if (data.data.length !== 0) {
+        if (data.data.successful_login) {
           context.commit('UPDATE_USER', data.data.user);
           localStorage.setItem('token', data.data.access_token);
         }
@@ -38,6 +38,11 @@ export default new Vuex.Store({
       if (localStorage.getItem('token')) {
         window.localStorage.removeItem('token');
       }
+    },
+    getUser(context) {
+      return api.get(`/user`).then(({ data }) => {
+        context.commit('UPDATE_USER', data);
+      });
     }
   }
 });

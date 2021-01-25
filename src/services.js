@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import router from './router';
+import store from './store';
 
 const axiosInstance = axios.create({
   //baseURL: 'https://covid-vaccine-server.herokuapp.com/api'
@@ -24,20 +25,20 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   response => response,
   error => {
-    console.log(error.response);
     if (error.response.status === 401) {
-      console.log('entrou');
-      Swal.fire({
-        icon: 'info',
-        title: 'Sessão expirada',
-        text:
-          'A sua sessão expirou. Você será redirecionado para a página de login em instantes.',
-        showConfirmButton: false,
-        timer: 2500
-      }).then(() => {
-        this.$store.dispatch('logout');
-        router.push({ name: 'login' });
-      });
+      if (router.history.current.name !== 'login') {
+        router.push({ name: 'login' }).then(() => {
+          store.dispatch('logout');
+          Swal.fire({
+            icon: 'info',
+            title: 'Sessão expirada',
+            text:
+              'A sua sessão expirou. Você foi redirecionado para a página de login.',
+            showConfirmButton: false,
+            timer: 2500
+          });
+        });
+      }
     }
     return Promise.reject(error);
   }
