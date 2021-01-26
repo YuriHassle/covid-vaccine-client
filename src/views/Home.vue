@@ -140,19 +140,17 @@
           />
         </FormField>
       </div>
-      <div style="margin-bottom: 1.5rem">
-        <button class="btn" @click.prevent="saveApplication">
-          Salvar
-        </button>
-        <div class="validation-errors" v-if="errors.length">
-          <b>Por favor, corrija o(s) seguinte(s) erro(s):</b>
-          <ol>
-            <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
-          </ol>
-        </div>
-        <div class="message">
-          {{ message }}
-        </div>
+      <button class="btn" @click.prevent="saveApplication">
+        Salvar
+      </button>
+      <div class="validation-errors" v-if="errors.length">
+        <b>Por favor, corrija o(s) seguinte(s) erro(s):</b>
+        <ol>
+          <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+        </ol>
+      </div>
+      <div class="message">
+        {{ message }}
       </div>
     </form>
   </section>
