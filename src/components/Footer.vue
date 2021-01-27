@@ -4,7 +4,10 @@
       <div class="footer-section">
         <h3>Endereço</h3>
         <p>
-          Avenida Mário Ypiranga Monteiro, 1695 - Adrianópolis Cep: 69057-001
+          Avenida Mário Ypiranga Monteiro, 1695 - Adrianópolis
+        </p>
+        <p>
+          Cep: 69057-001
         </p>
       </div>
       <div class="footer-section">
@@ -19,9 +22,9 @@
     </div>
     <div class="copyright">
       <p>
-        © 2021 - Secretaria Municipal de Saúde - SEMSA Desenvolvido pelo
+        © 2021 - Secretaria Municipal de Saúde - SEMSA
       </p>
-      <p>Departamento de Tecnologia da Informação - DTI.</p>
+      <p>Desenvolvido pelo Departamento de Tecnologia da Informação - DTI</p>
     </div>
   </footer>
 </template>

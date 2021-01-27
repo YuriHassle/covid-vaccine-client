@@ -1,17 +1,15 @@
 <template>
   <section>
-    <button class="btn" @click.prevent="logout">Deslogar</button>
-    <button class="btn" @click.prevent="edit">Editar</button>
+    <h1>Editar dados</h1>
     <ApplicationForm
-      type="create"
+      type="edit"
       :application="application"
       :CPFValidationMsg="CPFValidationMsg"
-      :checkedCPF="checkedCPF"
+      @findCPF="findCPF()"
       ref="applicationForm"
-      @validateCPF="validateCPF()"
     >
-      <button class="btn" @click.prevent="saveApplication">
-        Salvar
+      <button class="btn" @click.prevent="updateApplication">
+        Atualizar
       </button>
     </ApplicationForm>
     <div class="message">
@@ -19,9 +17,10 @@
     </div>
   </section>
 </template>
+
 <script>
   import { api } from '../services';
-  import { isValidCPF, formatDate1, formatDate2 } from '../helper';
+  import { formatDate1, formatDate2, isValidCPF } from '../helper';
   import Swal from 'sweetalert2';
   import ApplicationForm from '../components/ApplicationForm';
   export default {
@@ -49,7 +48,7 @@
       checkedCPF: false,
     }),
     methods: {
-      saveApplication() {
+      updateApplication() {
         if (!this.$refs.applicationForm.isDataValidated()) return;
         this.message = 'Enviando dados...';
 
@@ -57,17 +56,16 @@
         if (birthday) {
           this.application.citizen.birthday = formatDate1(birthday);
         }
-
-        this.application.user_id = this.$store.state.user.id;
+        this.application.updated_by = this.$store.state.user.id;
         api
-          .post('/applications', this.application)
+          .put(`/applications/${this.application.id}`, this.application)
           .then(() => {
             this.message = '';
             this.$refs.applicationForm.clearForm();
             Swal.fire({
               icon: 'success',
-              title: 'Cadastrado com êxito',
-              text: 'Os dados registrados com sucesso!',
+              title: 'Alteração realizada com êxito',
+              text: 'Os dados foram atualizados com sucesso!',
               showConfirmButton: false,
               timer: 1500,
             });
@@ -76,48 +74,35 @@
             this.message = '';
             Swal.fire({
               icon: 'error',
-              title: 'Erro ao cadastrar',
+              title: 'Erro ao atualizar',
               text: 'Ocorreu algum erro. Por favor, tente novamente.',
               showConfirmButton: false,
               timer: 2000,
             });
           });
       },
-      validateCPF() {
+      findCPF() {
         const cpf = this.application.citizen.cpf;
-        if (cpf.length === 0) {
-          this.CPFValidationMsg = 'O campo CPF é obrigatório';
+        if (!cpf) {
+          this.CPFValidationMsg =
+            'Informe um número de CPF para realizar a busca';
+        } else if (!isValidCPF(cpf)) {
+          this.CPFValidationMsg = 'CPF inválido: número inexistente';
         } else {
-          this.CPFValidationMsg = 'Verificando CPF...';
-          if (!isValidCPF(cpf)) {
-            this.CPFValidationMsg = 'CPF inválido: número inexistente';
-          } else {
-            api
-              .get(`/applications?cpf=${cpf}`)
-              .then(({ data }) => {
-                if (data.data.length !== 0) {
-                  const formattedDate = formatDate2(
-                    data.data[0].application_date
-                  );
-                  this.CPFValidationMsg = `CPF inválido: o portador do CPF ${cpf} já foi vacinado em ${formattedDate}`;
-                } else {
-                  this.checkedCPF = true;
-                  this.CPFValidationMsg = 'CPF válido!';
-                }
-              })
-              .catch(() => {
-                this.CPFValidationMsg =
-                  'Não foi possível consultar o CPF. Favor recarregar a página e tentar novamente.';
-              });
-          }
+          this.CPFValidationMsg = 'Procurando CPF...';
+          api.get(`applications?cpf=${cpf}`).then(({ data }) => {
+            if (data.data.length !== 0) {
+              this.application = data.data[0];
+              const birthday = data.data[0].citizen.birthday;
+              if (birthday) {
+                this.application.citizen.birthday = formatDate2(birthday);
+              }
+              this.CPFValidationMsg = '';
+            } else {
+              this.CPFValidationMsg = 'Esse CPF não consta em nossa base';
+            }
+          });
         }
-      },
-      logout() {
-        this.$store.dispatch('logout');
-        this.$router.push({ name: 'login' });
-      },
-      edit() {
-        this.$router.push({ name: 'edit' });
       },
     },
   };

@@ -4,9 +4,9 @@ import router from './router';
 import store from './store';
 
 const axiosInstance = axios.create({
-  //baseURL: 'https://covid-vaccine-server.herokuapp.com/api'
+  //baseURL: 'https://covid-vaccine-server.herokuapp.com/api',
   //baseURL: 'https://imuniza.manaus.am.gov.br/api'
-  baseURL: 'http://localhost:8000/api'
+  baseURL: 'http://localhost:8000/api',
 });
 
 axiosInstance.interceptors.request.use(
@@ -35,7 +35,7 @@ axiosInstance.interceptors.response.use(
             text:
               'A sua sessão expirou. Você foi redirecionado para a página de login.',
             showConfirmButton: false,
-            timer: 2500
+            timer: 2500,
           });
         });
       }
@@ -56,5 +56,5 @@ export const api = {
   },
   put(endpoint, body) {
     return axiosInstance.put(endpoint, body);
-  }
+  },
 };
