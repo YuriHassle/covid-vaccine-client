@@ -12,12 +12,11 @@
           pattern="[0-9]*"
           inputmode="numeric"
           placeholder="somente números"
-          @focusout="$emit('validateCPF')"
         />
-        <div v-if="CPFFindingMsg" class="message">
-          {{ CPFFindingMsg }}
+        <div v-if="CPFValidationMsg" class="message">
+          {{ CPFValidationMsg }}
         </div>
-        <button @click.prevent="findCPF" class="btn">Buscar</button>
+        <button @click.prevent="$emit('findCPF')" class="btn">Buscar</button>
       </FormField>
     </div>
     <div class="fields-container">
@@ -174,7 +173,7 @@
 </template>
 
 <script>
-  import { currentDate, isValidCPF } from '../helper';
+  import { currentDate } from '../helper';
   import FormField from './FormField';
   import { api } from '../services';
   export default {
@@ -195,23 +194,22 @@
         locations: null,
         categories: null,
         servicegroups: null,
-        filteredServicegroups: null,
         lots: null,
         vaccinators: null,
-        CPFFindingMsg: '',
         errors: [],
       };
     },
-    methods: {
-      findCPF() {
-        if (!this.application.citizen.cpf) {
-          this.CPFFindingMsg = 'Informe um número de CPF para realizar a busca';
-        } else if (!isValidCPF(this.application.citizen.cpf)) {
-          this.CPFFindingMsg = 'CPF inválido: número inexistente';
-        } else {
-          this.CPFFindingMsg = 'Procurando CPF...';
-        }
+    computed: {
+      filteredServicegroups() {
+        if (this.servicegroups) {
+          return this.servicegroups.filter(
+            serviceGroup =>
+              serviceGroup.category_id === this.application.category_id
+          );
+        } else return [];
       },
+    },
+    methods: {
       isDataValidated() {
         this.errors = [];
 
@@ -238,12 +236,12 @@
           }
         }
 
-        if (!this.checkedCPF) {
+        if (this.type === 'create' && !this.checkedCPF) {
           this.errors.push('Verifique a validade do CPF informado');
         }
 
         const birthday = this.application.citizen.birthday;
-        if (birthday.length !== 10 && birthday !== '') {
+        if (birthday && birthday.length !== 10 && birthday !== '') {
           this.errors.push('Informe um data de nascimento válida');
         }
 
@@ -253,20 +251,11 @@
         }
 
         const cns = this.application.citizen.cns;
-        if (cns.length !== 15 && cns !== '') {
+        if (cns && cns.length !== 15 && cns !== '') {
           this.errors.push('Informe um CNS com 15 caracteres');
         }
 
         return this.errors.length ? false : true;
-      },
-      selectServiceGroup() {
-        if (this.servicegroups) {
-          this.filteredServicegroups = this.servicegroups.filter(
-            serviceGroup => {
-              return serviceGroup.category_id === this.application.category_id;
-            }
-          );
-        }
       },
       clearForm() {
         this.application.lot_id = '';
@@ -276,6 +265,7 @@
         this.application.citizen.cns = '';
         this.application.citizen.name = '';
         this.application.citizen.birthday = '';
+        this.CPFValidationMsg = '';
       },
       fetchVaccinators() {
         api.get('/vaccinators').then(({ data }) => {
@@ -318,8 +308,6 @@
     padding: 10px 20px;
     max-width: 100vw;
     min-width: 60vw;
-  }
-  h1 {
   }
   h3 {
     padding-top: 20px;

@@ -4,7 +4,8 @@
     <ApplicationForm
       type="edit"
       :application="application"
-      :checkedCPF="checkedCPF"
+      :CPFValidationMsg="CPFValidationMsg"
+      @findCPF="findCPF()"
       ref="applicationForm"
     >
       <button class="btn" @click.prevent="updateApplication">
@@ -19,7 +20,7 @@
 
 <script>
   import { api } from '../services';
-  import { formatDate1 } from '../helper';
+  import { formatDate1, formatDate2, isValidCPF } from '../helper';
   import Swal from 'sweetalert2';
   import ApplicationForm from '../components/ApplicationForm';
   export default {
@@ -55,10 +56,9 @@
         if (birthday) {
           this.application.citizen.birthday = formatDate1(birthday);
         }
-
-        this.application.user_id = this.$store.state.user.id;
+        this.application.updated_by = this.$store.state.user.id;
         api
-          .put('/applications', this.application)
+          .put(`/applications/${this.application.id}`, this.application)
           .then(() => {
             this.message = '';
             this.$refs.applicationForm.clearForm();
@@ -80,6 +80,29 @@
               timer: 2000,
             });
           });
+      },
+      findCPF() {
+        const cpf = this.application.citizen.cpf;
+        if (!cpf) {
+          this.CPFValidationMsg =
+            'Informe um número de CPF para realizar a busca';
+        } else if (!isValidCPF(cpf)) {
+          this.CPFValidationMsg = 'CPF inválido: número inexistente';
+        } else {
+          this.CPFValidationMsg = 'Procurando CPF...';
+          api.get(`applications?cpf=${cpf}`).then(({ data }) => {
+            if (data.data.length !== 0) {
+              this.application = data.data[0];
+              const birthday = data.data[0].citizen.birthday;
+              if (birthday) {
+                this.application.citizen.birthday = formatDate2(birthday);
+              }
+              this.CPFValidationMsg = '';
+            } else {
+              this.CPFValidationMsg = 'Esse CPF não consta em nossa base';
+            }
+          });
+        }
       },
     },
   };
