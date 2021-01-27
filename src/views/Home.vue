@@ -1,6 +1,7 @@
 <template>
   <section>
     <button class="btn" @click.prevent="logout">Deslogar</button>
+    <button class="btn" @click.prevent="edit">Editar</button>
     <ApplicationForm
       type="create"
       :application="application"
@@ -114,6 +115,9 @@
       logout() {
         this.$store.dispatch('logout');
         this.$router.push({ name: 'login' });
+      },
+      edit() {
+        this.$router.push({ name: 'edit' });
       },
     },
   };
