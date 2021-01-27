@@ -21,9 +21,7 @@
     },
     created() {
       if (localStorage.getItem('token')) {
-        this.$store.dispatch('getUser').then(() => {
-          console.log(this.$store.state.user);
-        });
+        this.$store.dispatch('getUser');
       } else if (
         !localStorage.getItem('token') &&
         this.$router.history.current.name !== 'login'
