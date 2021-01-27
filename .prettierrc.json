@@ -3,5 +3,6 @@
   "singleQuote": true,
   "arrowParens": "avoid",
   "printWidth": 80,
-  "vueIndentScriptAndStyle": true
+  "vueIndentScriptAndStyle": true,
+  "trailingComma": "es5"
 }

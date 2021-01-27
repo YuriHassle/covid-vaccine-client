@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home';
+import EditApplication from './views/EditApplication';
 import Login from './views/Login';
 import Swal from 'sweetalert2';
 
@@ -13,17 +14,22 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: Home,
+    },
+    {
+      path: '/editar',
+      name: 'edit',
+      component: EditApplication,
     },
     {
       path: '/login',
       name: 'login',
-      component: Login
-    }
+      component: Login,
+    },
   ],
   scrollBehavior() {
     return window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
+  },
 });
 
 router.beforeEach((to, from, next) => {
@@ -35,7 +41,7 @@ router.beforeEach((to, from, next) => {
         text:
           'A sua sessão expirou. Você será redirecionado para a página de login em instantes.',
         showConfirmButton: false,
-        timer: 2500
+        timer: 2500,
       }).then(() => {
         this.$store.dispatch('logout');
         next('/login');

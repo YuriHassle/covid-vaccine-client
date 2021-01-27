@@ -1,7 +1,7 @@
 <template>
   <form>
-    <div class="fields-container">
-      <h3>Dados do cidadão</h3>
+    <div v-if="type === 'edit'" class="fields-container">
+      <h3>Clique em buscar para carregar os dados</h3>
       <FormField label="CPF" :required="true" name="cpf">
         <input
           type="text"
@@ -12,7 +12,32 @@
           pattern="[0-9]*"
           inputmode="numeric"
           placeholder="somente números"
-          @focusout="validateCPF()"
+          @focusout="$emit('validateCPF')"
+        />
+        <div v-if="CPFFindingMsg" class="message">
+          {{ CPFFindingMsg }}
+        </div>
+        <button @click.prevent="findCPF" class="btn">Buscar</button>
+      </FormField>
+    </div>
+    <div class="fields-container">
+      <h3>Dados do cidadão</h3>
+      <FormField
+        v-if="type === 'create'"
+        label="CPF"
+        :required="true"
+        name="cpf"
+      >
+        <input
+          type="text"
+          name="cpf"
+          v-model="application.citizen.cpf"
+          minlength="11"
+          maxlength="11"
+          pattern="[0-9]*"
+          inputmode="numeric"
+          placeholder="somente números"
+          @focusout="$emit('validateCPF')"
         />
         <div v-if="CPFValidationMsg" class="message">
           {{ CPFValidationMsg }}
@@ -34,7 +59,7 @@
         <input
           type="text"
           name="name"
-          v-model="application.citizen.name"
+          v-model.trim="application.citizen.name"
           minlength="9"
           maxlength="45"
         />
@@ -145,39 +170,49 @@
       </ol>
     </div>
     <slot> </slot>
-    <div class="message">
-      {{ message }}
-    </div>
   </form>
 </template>
 
 <script>
-  import { isValidCPF, currentDate, formatDate2 } from '../helper';
+  import { currentDate, isValidCPF } from '../helper';
   import FormField from './FormField';
   import { api } from '../services';
   export default {
     name: 'ApplicationForm',
-    props: ['application', 'isValidData'],
+    props: [
+      'type',
+      'application',
+      'isValidData',
+      'CPFValidationMsg',
+      'checkedCPF',
+    ],
     components: {
-      FormField
+      FormField,
     },
     data() {
       return {
         today: currentDate(),
-        CPFValidationMsg: '',
-        checkedCPF: false,
         locations: null,
         categories: null,
         servicegroups: null,
         filteredServicegroups: null,
         lots: null,
         vaccinators: null,
-        message: null,
-        errors: []
+        CPFFindingMsg: '',
+        errors: [],
       };
     },
     methods: {
-      isValidData() {
+      findCPF() {
+        if (!this.application.citizen.cpf) {
+          this.CPFFindingMsg = 'Informe um número de CPF para realizar a busca';
+        } else if (!isValidCPF(this.application.citizen.cpf)) {
+          this.CPFFindingMsg = 'CPF inválido: número inexistente';
+        } else {
+          this.CPFFindingMsg = 'Procurando CPF...';
+        }
+      },
+      isDataValidated() {
         this.errors = [];
 
         const requiredFields = [
@@ -189,12 +224,12 @@
           { name: "'grupo prioritário'", value: this.application.category_id },
           {
             name: "'grupo de atendimento'",
-            value: this.application.servicegroup_id
+            value: this.application.servicegroup_id,
           },
           {
             name: "'data de vacinação'",
-            value: this.application.application_date
-          }
+            value: this.application.application_date,
+          },
         ];
 
         for (const field of requiredFields) {
@@ -233,36 +268,6 @@
           );
         }
       },
-      validateCPF() {
-        const cpf = this.application.citizen.cpf;
-        if (cpf.length !== 0) {
-          this.CPFValidationMsg = 'Verificando CPF...';
-
-          if (!isValidCPF(cpf)) {
-            this.CPFValidationMsg = 'CPF inválido: número inexistente';
-          } else {
-            api
-              .get(`/applications?cpf=${cpf}`)
-              .then(({ data }) => {
-                if (data.data.length !== 0) {
-                  const formattedDate = formatDate2(
-                    data.data[0].application_date
-                  );
-                  this.CPFValidationMsg = `CPF inválido: o portador do CPF ${cpf} já foi vacinado em ${formattedDate}`;
-                } else {
-                  this.checkedCPF = true;
-                  this.CPFValidationMsg = 'CPF válido!';
-                }
-              })
-              .catch(() => {
-                this.CPFValidationMsg =
-                  'Não foi possível consultar o CPF. Favor recarregar a página e tentar novamente.';
-              });
-          }
-        } else {
-          this.CPFValidationMsg = 'O campo CPF é obrigatório';
-        }
-      },
       clearForm() {
         this.application.lot_id = '';
         this.application.category_id = '';
@@ -296,7 +301,7 @@
         api.get('/lots').then(({ data }) => {
           this.lots = data.data;
         });
-      }
+      },
     },
     created() {
       this.fetchVaccinators();
@@ -304,7 +309,7 @@
       this.fetchCategories();
       this.fetchServicegroups();
       this.fetchLots();
-    }
+    },
   };
 </script>
 
@@ -314,9 +319,12 @@
     max-width: 100vw;
     min-width: 60vw;
   }
+  h1 {
+  }
   h3 {
     padding-top: 20px;
     padding-left: 20px;
+    margin-bottom: 15px;
   }
   .validation-errors {
     padding-top: 20px;
@@ -331,7 +339,7 @@
     flex-direction: column;
     background-color: rgba(237, 244, 245, 0.972);
   }
-  .fields-container:first-child {
-    margin-bottom: 40px;
+  .fields-container:not(:first-child) {
+    margin-top: 40px;
   }
 </style>
