@@ -1,29 +1,50 @@
-# covid-vaccine-client
+# Covid-vaccine-client
 
-## Project setup
+Projeto para front-end do sistema para gerenciamento de registros de imunizaçao contra a COVID-19. Link para o sistema: 
+- ambiente de homologação: http://imunizacovid19-hom.manaus.am.gov.br.
+- ambiente de produção: http://imunizacovid19.manaus.am.gov.br.
 
-```
-yarn install
-```
+## Sobre o Sistema
 
-### Compiles and hot-reloads for development
+O sistema nomeado covid-vaccine-client tem como objetivo auxiliar o cadastro de [...]. É disponibilizado um formulário onde [...].
 
-```
-yarn serve
-```
+O sistema contempla [...].
 
-### Compiles and minifies for production
+## Implementação
 
-```
-yarn build
-```
+Para a implementação foi utilizado o framework Vue.js (https://br.vuejs.org/).
+As demais dependências encontram-se no arquivo de configuração package.json.
 
-### Lints and fixes files
+## Pré-Requisitos para deployment
 
-```
-yarn lint
-```
+ 1. Crie um arquivo chamado .env, para colocar suas variáveis de ambiente. Há um arquivo de exemplo, nomeado .env.example, o qual você pode se guiar;
 
-### Customize configuration
+ 2. A instância dos containers que dão suporte ao serviço requer a criação de uma rede, para que possa se comunicar com containers de outros serviços. 
+    
+    2.1 Para criar a rede, execute:
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
+        docker network create docker-semsa
+
+     Caso a rede já esteja criada, isso não afetará seus containers.
+
+
+## Deployment
+
+### Utilização sem o docker
+
+1. Após efetuar o clone deste repositório, no diretório raiz execute:
+
+        yarn install
+
+2. Para iniciar o serviço:
+
+        yarn server
+
+### Utilização com o docker
+
+1. Após efetuar o clone deste repositório, no diretório raiz execute:
+        
+        docker-compose up -d
+
+
+## Deploy automatizado

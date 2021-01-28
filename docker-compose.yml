@@ -1,0 +1,23 @@
+version: '3.8'
+
+services: 
+  webapp:
+    build:
+        context: .
+        cache_from:
+            - node:12-stretch
+            - node_modules
+        target: production-stage
+    image: semsa/covid_vacine_client_nginx:latest
+    ports:
+        - 8080:80  
+    volumes:
+      - .:/app
+    container_name: covid_vaccine_client
+    command: [ "nginx", "-g", "daemon off;" ]    
+
+networks:
+  default:
+      external: 
+          name: docker-semsa
+                        
