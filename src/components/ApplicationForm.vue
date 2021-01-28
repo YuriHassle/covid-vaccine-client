@@ -78,7 +78,6 @@
           class="select-form"
           v-model="application.category_id"
           name="category"
-          @change="selectServiceGroup()"
         >
           <option
             v-for="category in categories"
