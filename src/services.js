@@ -6,7 +6,7 @@ import store from './store';
 const axiosInstance = axios.create({
   //baseURL: 'https://covid-vaccine-server.herokuapp.com/api',
   //baseURL: 'https://imuniza.manaus.am.gov.br/api'
-  baseURL: 'http://localhost:8000/api',
+  baseURL: process.env.VUE_APP_HOST,
 });
 
 axiosInstance.interceptors.request.use(
