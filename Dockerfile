@@ -1,10 +1,6 @@
-FROM node:12-stretch as build-stage
+FROM node:12-slim as build-stage
 
 WORKDIR /app
-
-RUN echo "Updating container"
-RUN apt update
-RUN apt upgrade -y
 
 RUN echo "Installing vuejs as a global form"
 RUN yarn global add @vue/cli
@@ -14,8 +10,6 @@ COPY package*.json ./
 
 RUN echo "Installing npm packages"
 RUN yarn install
-# RUN echo "Updating packages"
-# RUN yarn upgrade
 
 RUN echo "Copying all of source to container"
 COPY . .

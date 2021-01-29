@@ -5,7 +5,7 @@ services:
     build:
         context: .
         cache_from:
-            - node:12-stretch
+            - node:12-slim
             - node_modules
         target: production-stage
     image: semsa/covid_vacine_client_nginx:latest
