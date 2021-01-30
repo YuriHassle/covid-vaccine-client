@@ -1,7 +1,11 @@
 <template>
-  <section>
-    <button class="btn" @click.prevent="logout">Deslogar</button>
-    <button class="btn" @click.prevent="edit">Editar</button>
+  <v-container>
+    <v-btn color="primary" elevation="2" @click.prevent="logout">
+      Deslogar
+    </v-btn>
+    <v-btn color="primary" elevation="2" @click.prevent="edit">
+      Editar
+    </v-btn>
     <ApplicationForm
       type="create"
       :application="application"
@@ -10,14 +14,14 @@
       ref="applicationForm"
       @validateCPF="validateCPF()"
     >
-      <button class="btn" @click.prevent="saveApplication">
+      <v-btn color="primary" elevation="2" @click.prevent="saveApplication">
         Salvar
-      </button>
+      </v-btn>
     </ApplicationForm>
     <div class="message">
       {{ message }}
     </div>
-  </section>
+  </v-container>
 </template>
 <script>
   import { api } from '../services';
@@ -91,7 +95,7 @@
         } else {
           this.CPFValidationMsg = 'Verificando CPF...';
           if (!isValidCPF(cpf)) {
-            this.CPFValidationMsg = 'CPF inválido: número inexistente';
+            this.CPFValidationMsg = 'Número de CPF inexistente';
           } else {
             api
               .get(`/applications?cpf=${cpf}`)
@@ -100,7 +104,7 @@
                   const formattedDate = formatDate2(
                     data.data[0].application_date
                   );
-                  this.CPFValidationMsg = `CPF inválido: o portador do CPF ${cpf} já foi vacinado em ${formattedDate}`;
+                  this.CPFValidationMsg = `O portador deste CPF já foi vacinado em ${formattedDate}`;
                 } else {
                   this.checkedCPF = true;
                   this.CPFValidationMsg = 'CPF válido!';
