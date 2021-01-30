@@ -63,6 +63,7 @@
           .post('/applications', this.application)
           .then(() => {
             this.message = '';
+            this.CPFValidationMsg = '';
             this.$refs.applicationForm.clearForm();
             Swal.fire({
               icon: 'success',
