@@ -140,21 +140,10 @@
           </option>
         </select>
       </FormField>
-      <FormField label="Imunobiológico" :required="true" name="imuno">
-        <select
-          class="select-form"
-          name="imuno"
-          v-model="application.immuno_id"
-        >
-          <option v-for="imb in immunos" :key="imb.id" :value="imb.id">
-            {{ imb.name }}
-          </option>
-        </select>
-      </FormField>
       <FormField label="Lote" :required="true" name="lot">
         <select class="select-form" name="lot" v-model="application.lot_id">
-          <option v-for="lot in filteredLots" :key="lot.id" :value="lot.id">
-            {{ lot.name }}
+          <option v-for="lot in lots" :key="lot.id" :value="lot.id">
+            {{ lot.immunobiological.name }} - {{ lot.name }}
           </option>
         </select>
       </FormField>
@@ -205,7 +194,6 @@
         categories: null,
         servicegroups: null,
         lots: null,
-        immunos: null,
         vaccinators: null,
         errors: [],
       };
@@ -219,14 +207,6 @@
           );
         } else return [];
       },
-
-      filteredLots() {
-        if (this.lots) {
-          return this.lots.filter(
-            lot => lot.immunobiologicals_id === this.application.immuno_id
-          );
-        } else return [];
-      },
     },
     methods: {
       isDataValidated() {
@@ -236,7 +216,6 @@
           { name: "'sala de vacina'", value: this.application.location_id },
           { name: "'CPF do cidadão'", value: this.application.citizen.cpf },
           { name: "'nome do cidadão'", value: this.application.citizen.name },
-          { name: "'Imunobiológico'", value: this.application.immuno_id },
           { name: "'lote'", value: this.application.lot_id },
           { name: "'vacinador'", value: this.application.vaccinator_id },
           { name: "'grupo prioritário'", value: this.application.category_id },
@@ -278,7 +257,6 @@
         return this.errors.length ? false : true;
       },
       clearForm() {
-        this.application.immuno_id = '';
         this.application.lot_id = '';
         this.application.category_id = '';
         this.application.servicegroup_id = '';
@@ -307,11 +285,6 @@
           this.servicegroups = data.data;
         });
       },
-      fetchImmunos() {
-        api.get('/immunos').then(({ data }) => {
-          this.immunos = data.data;
-        });
-      },
       fetchLots() {
         api.get('/lots').then(({ data }) => {
           this.lots = data.data;
@@ -323,7 +296,6 @@
       this.fetchLocations();
       this.fetchCategories();
       this.fetchServicegroups();
-      this.fetchImmunos();
       this.fetchLots();
     },
   };
