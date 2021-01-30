@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="container">
     <button class="btn" @click.prevent="logout">Deslogar</button>
     <button class="btn" @click.prevent="edit">Editar</button>
     <ApplicationForm
@@ -129,5 +129,10 @@
     margin: auto;
     margin-top: 20px;
     margin-bottom: 10px;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 </style>

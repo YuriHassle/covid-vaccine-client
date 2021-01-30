@@ -1,6 +1,7 @@
 <template>
-  <section>
+  <section class="container">
     <h1>Editar dados</h1>
+    <button @click="$router.push({ name: 'home' })" class="btn">Voltar</button>
     <ApplicationForm
       type="edit"
       :application="application"
@@ -89,7 +90,7 @@
         } else if (!isValidCPF(cpf)) {
           this.CPFValidationMsg = 'CPF inválido: número inexistente';
         } else {
-          this.CPFValidationMsg = 'Procurando CPF...';
+          this.CPFValidationMsg = 'Aguarde, procurando CPF...';
           api.get(`applications?cpf=${cpf}`).then(({ data }) => {
             if (data.data.length !== 0) {
               this.application = data.data[0];
@@ -113,5 +114,11 @@
     margin: auto;
     margin-top: 20px;
     margin-bottom: 10px;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
   }
 </style>
