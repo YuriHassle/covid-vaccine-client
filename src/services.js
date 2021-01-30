@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import router from './router';
-import store from './store';
+import store from './plugins/store';
 
 const axiosInstance = axios.create({
   //baseURL: 'https://covid-vaccine-server.herokuapp.com/api',
