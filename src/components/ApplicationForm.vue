@@ -141,7 +141,11 @@
         </select>
       </FormField>
       <FormField label="Imunobiológico" :required="true" name="imuno">
-        <select class="select-form" name="imuno" v-model="application.immuno_id">
+        <select
+          class="select-form"
+          name="imuno"
+          v-model="application.immuno_id"
+        >
           <option v-for="imb in immunos" :key="imb.id" :value="imb.id">
             {{ imb.name }}
           </option>
@@ -149,11 +153,7 @@
       </FormField>
       <FormField label="Lote" :required="true" name="lot">
         <select class="select-form" name="lot" v-model="application.lot_id">
-        <option
-            v-for="lot in filteredLots"
-            :key="lot.id"
-            :value="lot.id"
-          >
+          <option v-for="lot in filteredLots" :key="lot.id" :value="lot.id">
             {{ lot.name }}
           </option>
         </select>
@@ -223,8 +223,7 @@
       filteredLots() {
         if (this.lots) {
           return this.lots.filter(
-            lot =>
-              lot.immunobiologicals_id === this.application.immuno_id
+            lot => lot.immunobiologicals_id === this.application.immuno_id
           );
         } else return [];
       },
@@ -287,7 +286,6 @@
         this.application.citizen.cns = '';
         this.application.citizen.name = '';
         this.application.citizen.birthday = '';
-        this.CPFValidationMsg = '';
       },
       fetchVaccinators() {
         api.get('/vaccinators').then(({ data }) => {
