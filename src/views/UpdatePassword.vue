@@ -1,5 +1,10 @@
 <template>
     <section class="container">
+     
+     <loading :active.sync="isLoading" 
+        :can-cancel="true" 
+        :is-full-page="true"></loading>
+
      <div class="validation-errors" v-if="errors.length">
       <b>Por favor, corrija o(s) seguinte(s) erro(s):</b>
       <ol>
@@ -54,24 +59,30 @@
 import FormField from '../components/FormField';
 import { api } from '../services';
 import Swal from 'sweetalert2';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
 
 export default {
     name: 'updatepassword',
      components: {
       FormField,
+      Loading
     },
     data() {
         return {
             errors: [],
-            user: {}
+            user: {},
+            isLoading: false,
         }
     },
 
     methods: {
         updatePassword() {
+          this.isLoading = true
             api.put('/users/updatepassword', this.user).then(({ data }) => {
-                if(data.data.length > 0){
+                if(data.data.errors.length > 0){
                     this.errors = data.data.errors
+                    this.isLoading = false
                 }else{
                     this.errors = []
                     Swal.fire({
