@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from './views/Home';
 import EditApplication from './views/EditApplication';
+import UpdatePassword from './views/UpdatePassword';
 import Login from './views/Login';
 import Swal from 'sweetalert2';
 
@@ -20,6 +21,11 @@ const router = new Router({
       path: '/editar',
       name: 'edit',
       component: EditApplication,
+    },
+    {
+      path: '/alterarsenha',
+      name: 'updatepassword',
+      component: UpdatePassword,
     },
     {
       path: '/login',
