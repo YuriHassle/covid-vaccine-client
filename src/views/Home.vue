@@ -1,6 +1,16 @@
 <template>
   <section class="container">
-    <button class="btn" @click.prevent="logout">Deslogar</button>
+    <div class="btn-container">
+      <button class="btn btn-secondary" @click.prevent="logout">
+        Deslogar
+      </button>
+      <button
+        class="btn btn-secondary"
+        @click.prevent="$router.push({ name: 'updatepassword' })"
+      >
+        Trocar Senha
+      </button>
+    </div>
     <button class="btn" @click.prevent="edit">Editar</button>
     <ApplicationForm
       type="create"
@@ -127,12 +137,17 @@
 <style scoped lang="scss">
   .btn {
     margin: auto;
-    margin-top: 20px;
-    margin-bottom: 10px;
+    margin: 20px 10px 10px 10px;
   }
   .container {
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+  .btn-secondary {
+    background-color: rgb(150, 184, 141);
+  }
+  .btn-container {
+    display: flex;
   }
 </style>
