@@ -3,6 +3,7 @@ import Router from 'vue-router';
 import Home from './views/Home';
 import EditApplication from './views/EditApplication';
 import UpdatePassword from './views/UpdatePassword';
+import UpdateUserData from './views/UpdateUserData';
 import Login from './views/Login';
 import Swal from 'sweetalert2';
 
@@ -26,6 +27,11 @@ const router = new Router({
       path: '/alterarsenha',
       name: 'updatepassword',
       component: UpdatePassword,
+    },
+    {
+      path: '/alterardados',
+      name: 'updateuserdata',
+      component: UpdateUserData,
     },
     {
       path: '/login',
