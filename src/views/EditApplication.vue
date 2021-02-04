@@ -36,7 +36,7 @@
         servicegroup_id: '',
         vaccinator_id: '',
         application_date: '',
-        dose: 1,
+        dose: '',
         citizen: {
           cpf: '',
           cns: '',

@@ -10,7 +10,7 @@
       >
         Trocar Senha
       </button>
-       <button
+      <button
         class="btn btn-secondary"
         @click.prevent="$router.push({ name: 'updateuserdata' })"
       >
@@ -52,7 +52,7 @@
         servicegroup_id: '',
         vaccinator_id: '',
         application_date: '',
-        dose: 1,
+        dose: '',
         citizen: {
           cpf: '',
           cns: '',

@@ -140,6 +140,13 @@
           </option>
         </select>
       </FormField>
+      <FormField label="Dose" :required="true" name="dose">
+        <select class="select-form" name="dose" v-model="application.dose">
+          <option v-for="(dose, index) in [1, 2]" :value="dose" :key="index">
+            {{ dose }}
+          </option>
+        </select>
+      </FormField>
       <FormField label="Lote" :required="true" name="lot">
         <select class="select-form" name="lot" v-model="application.lot_id">
           <option v-for="lot in lots" :key="lot.id" :value="lot.id">
