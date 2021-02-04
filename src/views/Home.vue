@@ -10,6 +10,12 @@
       >
         Trocar Senha
       </button>
+       <button
+        class="btn btn-secondary"
+        @click.prevent="$router.push({ name: 'updateuserdata' })"
+      >
+        Atualizar Dados
+      </button>
     </div>
     <button class="btn" @click.prevent="edit">Editar</button>
     <ApplicationForm
