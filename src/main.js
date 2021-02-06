@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import VueMask from 'v-mask';
-import router from './router';
+import router from './plugins/router';
 import store from './plugins/store';
 import vuetify from './plugins/vuetify';
 

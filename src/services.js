@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import router from './router';
+import router from './plugins/router';
 import store from './plugins/store';
 
 const axiosInstance = axios.create({
