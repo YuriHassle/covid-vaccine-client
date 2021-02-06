@@ -1,3 +1,5 @@
+import { isValidCPF } from './utils';
+
 export class Validator {
   static required(msg) {
     return v => !!v || msg || 'Este campo é obrigatório';
@@ -17,5 +19,8 @@ export class Validator {
 
   static len(n) {
     return v => !v || v.length === n || `O número de caracteres deve ser ${n}`;
+  }
+  static validateCPF() {
+    return v => !v || isValidCPF(v) || 'Número de CPF inexistente';
   }
 }
