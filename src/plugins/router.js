@@ -1,8 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home';
-import EditApplication from './views/EditApplication';
-import Login from './views/Login';
+import Home from '../views/Home';
+import EditApplication from '../views/EditApplication';
+import Login from '../views/Login';
 import Swal from 'sweetalert2';
 
 Vue.use(Router);
