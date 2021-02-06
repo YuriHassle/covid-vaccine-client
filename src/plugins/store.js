@@ -10,13 +10,13 @@ export default new Vuex.Store({
       id: '',
       cpf: '',
       name: '',
-      email: ''
-    }
+      email: '',
+    },
   },
   mutations: {
     UPDATE_USER(state, payload) {
       state.user = Object.assign(state.user, payload);
-    }
+    },
   },
   actions: {
     login(context, payload) {
@@ -24,6 +24,10 @@ export default new Vuex.Store({
         if (data.data.successful_login) {
           context.commit('UPDATE_USER', data.data.user);
           localStorage.setItem('token', data.data.access_token);
+          /*salvando o user_id no localStore para que ele esteja sempre disponível
+           * a action getUser() leva um tempo para recuperar o dado
+           */
+          localStorage.setItem('user_id', data.data.user.id);
         }
         return data;
       });
@@ -33,16 +37,19 @@ export default new Vuex.Store({
         id: '',
         cpf: '',
         name: '',
-        email: ''
+        email: '',
       });
       if (localStorage.getItem('token')) {
         window.localStorage.removeItem('token');
+      }
+      if (localStorage.getItem('user_id')) {
+        window.localStorage.removeItem('user_id');
       }
     },
     getUser(context) {
       return api.get(`/user`).then(({ data }) => {
         context.commit('UPDATE_USER', data);
       });
-    }
-  }
+    },
+  },
 });
