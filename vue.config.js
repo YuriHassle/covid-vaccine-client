@@ -4,5 +4,9 @@ module.exports = {
       args[0].title = 'Imuniza Manaus';
       return args;
     });
-  }
+  },
+
+  transpileDependencies: [
+    'vuetify'
+  ]
 };

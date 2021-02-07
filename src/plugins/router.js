@@ -1,10 +1,15 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+<<<<<<< HEAD:src/router.js
 import Home from './views/Home';
 import EditApplication from './views/EditApplication';
 import UpdatePassword from './views/UpdatePassword';
 import UpdateUserData from './views/UpdateUserData';
 import Login from './views/Login';
+=======
+import Home from '../views/Home';
+import Login from '../views/Login';
+>>>>>>> refactor/vuetify:src/plugins/router.js
 import Swal from 'sweetalert2';
 
 Vue.use(Router);
@@ -19,6 +24,7 @@ const router = new Router({
       component: Home,
     },
     {
+<<<<<<< HEAD:src/router.js
       path: '/editar',
       name: 'edit',
       component: EditApplication,
@@ -34,6 +40,8 @@ const router = new Router({
       component: UpdateUserData,
     },
     {
+=======
+>>>>>>> refactor/vuetify:src/plugins/router.js
       path: '/login',
       name: 'login',
       component: Login,

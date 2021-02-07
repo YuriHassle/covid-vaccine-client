@@ -1,49 +1,39 @@
 <template>
-  <section class="container">
-    <div class="btn-container">
-      <button class="btn btn-secondary" @click.prevent="logout">
-        Deslogar
-      </button>
-      <button
-        class="btn btn-secondary"
-        @click.prevent="$router.push({ name: 'updatepassword' })"
-      >
-        Trocar Senha
-      </button>
-      <button
-        class="btn btn-secondary"
-        @click.prevent="$router.push({ name: 'updateuserdata' })"
-      >
-        Atualizar Dados
-      </button>
+  <v-container>
+    <div class="menu mx-auto mt-5">
+      <v-select
+        solo
+        v-model="selectedMenu"
+        :items="menuItems"
+        :label="this.$store.state.user.name || 'Carregando...'"
+        color="indigo"
+        @change="handleMenuClick()"
+      ></v-select>
     </div>
-    <button class="btn" @click.prevent="edit">Editar</button>
     <ApplicationForm
-      type="create"
+      :type="type"
       :application="application"
-      :CPFValidationMsg="CPFValidationMsg"
-      :checkedCPF="checkedCPF"
-      ref="applicationForm"
-      @validateCPF="validateCPF()"
+      @changeType="type = $event"
     >
-      <button class="btn" @click.prevent="saveApplication">
-        Salvar
-      </button>
     </ApplicationForm>
-    <div class="message">
-      {{ message }}
-    </div>
-  </section>
+    <ApplicationList
+      @onEdit="handleEdit"
+      @findCPF="findCPF"
+      :searchCPFMsg="searchCPFMsg"
+    />
+  </v-container>
 </template>
 <script>
-  import { api } from '../services';
-  import { isValidCPF, formatDate1, formatDate2 } from '../helper';
-  import Swal from 'sweetalert2';
   import ApplicationForm from '../components/ApplicationForm';
+  import ApplicationList from '../components/ApplicationList';
+  import { api } from '../services';
+  import { formatDate2 } from '../helpers/utils';
   export default {
     name: 'Home',
-    components: { ApplicationForm },
+    components: { ApplicationForm, ApplicationList },
     data: () => ({
+      searchCPFMsg: '',
+      type: 'create',
       application: {
         user_id: '',
         location_id: '',
@@ -52,7 +42,7 @@
         servicegroup_id: '',
         vaccinator_id: '',
         application_date: '',
-        dose: '',
+        dose: null,
         citizen: {
           cpf: '',
           cns: '',
@@ -60,100 +50,55 @@
           birthday: '',
         },
       },
-      message: '',
-      CPFValidationMsg: '',
-      checkedCPF: false,
+      selectedMenu: '',
+      menuItems: [{ text: 'Deslogar', value: 'logout' }],
     }),
     methods: {
-      saveApplication() {
-        if (!this.$refs.applicationForm.isDataValidated()) return;
-        this.message = 'Enviando dados...';
-
+      handleEdit(application) {
+        console.log(application);
+        this.type = 'edit';
+        this.application = { ...application };
+        this.application.citizen = { ...application.citizen };
         const birthday = this.application.citizen.birthday;
         if (birthday) {
-          this.application.citizen.birthday = formatDate1(birthday);
+          this.application.citizen.birthday = formatDate2(birthday);
         }
-
-        this.application.user_id = this.$store.state.user.id;
-        api
-          .post('/applications', this.application)
-          .then(() => {
-            this.message = '';
-            this.CPFValidationMsg = '';
-            this.$refs.applicationForm.clearForm();
-            Swal.fire({
-              icon: 'success',
-              title: 'Cadastrado com êxito',
-              text: 'Os dados registrados com sucesso!',
-              showConfirmButton: false,
-              timer: 1500,
-            });
-          })
-          .catch(() => {
-            this.message = '';
-            Swal.fire({
-              icon: 'error',
-              title: 'Erro ao cadastrar',
-              text: 'Ocorreu algum erro. Por favor, tente novamente.',
-              showConfirmButton: false,
-              timer: 2000,
-            });
-          });
       },
-      validateCPF() {
-        const cpf = this.application.citizen.cpf;
-        if (cpf.length === 0) {
-          this.CPFValidationMsg = 'O campo CPF é obrigatório';
-        } else {
-          this.CPFValidationMsg = 'Verificando CPF...';
-          if (!isValidCPF(cpf)) {
-            this.CPFValidationMsg = 'CPF inválido: número inexistente';
+      findCPF(cpf) {
+        this.searchCPFMsg = 'Procurando CPF...';
+        api.get(`applications?cpf=${cpf}`).then(({ data }) => {
+          if (data.data.length !== 0) {
+            this.application = data.data[0];
+            const birthday = data.data[0].citizen.birthday;
+            if (birthday) {
+              this.application.citizen.birthday = formatDate2(birthday);
+            }
+            this.searchCPFMsg = '';
+            this.type = 'edit';
           } else {
-            api
-              .get(`/applications?cpf=${cpf}`)
-              .then(({ data }) => {
-                if (data.data.length !== 0) {
-                  const formattedDate = formatDate2(
-                    data.data[0].application_date
-                  );
-                  this.CPFValidationMsg = `CPF inválido: o portador do CPF ${cpf} já foi vacinado em ${formattedDate}`;
-                } else {
-                  this.checkedCPF = true;
-                  this.CPFValidationMsg = 'CPF válido!';
-                }
-              })
-              .catch(() => {
-                this.CPFValidationMsg =
-                  'Não foi possível consultar o CPF. Favor recarregar a página e tentar novamente.';
-              });
+            this.searchCPFMsg = 'Esse CPF não consta em nossa base';
           }
+        });
+      },
+      handleMenuClick() {
+        if (this.selectedMenu === 'logout') {
+          this.$store.dispatch('logout');
+          this.$router.push({ name: 'login' });
         }
-      },
-      logout() {
-        this.$store.dispatch('logout');
-        this.$router.push({ name: 'login' });
-      },
-      edit() {
-        this.$router.push({ name: 'edit' });
+        if (this.selectedMenu === 'change-password') {
+          this.$router.push({ name: 'updatepassword' });
+        }
+        if (this.selectedMenu === 'update-user-data') {
+          $router.push({ name: 'updateuserdata' });
+        }
+        this.selectedMenu = '';
       },
     },
   };
 </script>
 
 <style scoped lang="scss">
-  .btn {
-    margin: auto;
-    margin: 20px 10px 10px 10px;
-  }
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .btn-secondary {
-    background-color: rgb(150, 184, 141);
-  }
-  .btn-container {
-    display: flex;
+  .menu {
+    width: 200px;
   }
 </style>

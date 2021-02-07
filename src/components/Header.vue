@@ -1,11 +1,14 @@
 <template>
   <header>
-    <div class="header">
-      <img src="../assets/fullbrasao.png" alt="PREFEITURA DE MANAUS  - SEMSA" />
+    <div class="header-title">
+      <a class="vacinometro" href="https://labonline.manaus.am.gov.br/">
+        <p>VACINAÇÃO COVID-19</p>
+        <b>SEMSA MANAUS</b>
+      </a>
     </div>
-    <div class="text-header">
-      <p>VACINAÇÃO COVID19 - SEMSA MANAUS</p>
-    </div>
+    <a href="https://manaus.am.gov.br">
+      <img src="../assets/full_brand.png" />
+    </a>
   </header>
 </template>
 
@@ -14,21 +17,33 @@
 </script>
 
 <style scoped lang="scss">
-  .header {
+  header {
+    background-color: #0ca3ab;
+    padding: 25px;
     display: flex;
-    padding: 1rem;
-    background-color: #005346;
-    justify-content: center;
+    justify-content: space-between;
+    background-image: url(../assets/bg-header.png);
+    background-position: bottom left;
+    background-repeat: repeat-x;
+    a {
+      margin-bottom: 20px;
+    }
   }
-  .text-header {
-    background-color: #005346;
+
+  .header-title {
     p {
-      font-family: 'Roboto', sans-serif;
-      font-weight: bold;
-      font-size: 2em;
-      text-align: center;
-      padding: 1rem 2rem;
-      color: snow;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0;
+    }
+    b {
+      font-size: 1.2rem;
+      color: #fff;
+      font-weight: 600;
+    }
+    a {
+      text-decoration: none;
     }
   }
 </style>
