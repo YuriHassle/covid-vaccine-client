@@ -35,6 +35,7 @@
       searchCPFMsg: '',
       type: 'create',
       application: {
+        id: '',
         user_id: '',
         location_id: '',
         lot_id: '',
@@ -42,7 +43,7 @@
         servicegroup_id: '',
         vaccinator_id: '',
         application_date: '',
-        dose: null,
+        dose: '',
         citizen: {
           cpf: '',
           cns: '',
@@ -51,7 +52,11 @@
         },
       },
       selectedMenu: '',
-      menuItems: [{ text: 'Deslogar', value: 'logout' }],
+      menuItems: [
+        { text: 'Deslogar', value: 'logout' },
+        { text: 'Trocar senha', value: 'change-password' },
+        { text: 'Alterar dados', value: 'update-user-data' },
+      ],
     }),
     methods: {
       handleEdit(application) {
@@ -89,7 +94,7 @@
           this.$router.push({ name: 'updatepassword' });
         }
         if (this.selectedMenu === 'update-user-data') {
-          $router.push({ name: 'updateuserdata' });
+          this.$router.push({ name: 'updateuserdata' });
         }
         this.selectedMenu = '';
       },
