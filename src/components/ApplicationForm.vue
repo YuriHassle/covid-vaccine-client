@@ -103,7 +103,6 @@
               { text: 1, value: 1 },
               { text: 2, value: 2 },
             ]"
-            disabled
             append-icon="mdi-alert-circle"
             class="mb-4"
           ></v-select>
@@ -164,11 +163,16 @@
           <v-btn class="white--text btn" elevation="2" type="submit">
             {{ type === 'create' ? 'Cadastrar' : 'Editar' }}
           </v-btn>
-          <v-btn v-if="type === 'edit'" @click="handleCancel()" elevation="2">
+          <v-btn
+            v-if="type === 'edit'"
+            class="ml-5"
+            @click="handleCancel()"
+            elevation="2"
+          >
             Cancelar
           </v-btn>
           <div class="message">
-            {{ message }}
+            <p>{{ message }}</p>
           </div>
         </v-card-text>
       </v-card>
@@ -253,7 +257,10 @@
         this.application.user_id = localStorage.getItem('user_id');
         api
           .post('/applications', this.application)
-          .then(() => {
+          .then(({ data }) => {
+            this.application.id = data.data.id;
+            this.application.citizen.id = data.data.citizen_id;
+            console.log(this.application);
             this.$store.dispatch('addUserApplication', this.application);
             this.message = '';
             this.CPFValidationMsg = '';
@@ -388,5 +395,10 @@
   }
   .btn {
     background-color: #af7b48e1 !important;
+  }
+  .message p {
+    color: #aa4465;
+    font-size: 1.1rem;
+    margin-top: 10px;
   }
 </style>
