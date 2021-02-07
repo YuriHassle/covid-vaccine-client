@@ -1,8 +1,15 @@
 <template>
   <v-container>
-    <v-btn color="primary" elevation="2" @click.prevent="logout">
-      Deslogar
-    </v-btn>
+    <div class="menu mx-auto mt-5">
+      <v-select
+        solo
+        v-model="selectedMenu"
+        :items="menuItems"
+        :label="this.$store.state.user.name || 'Carregando...'"
+        color="indigo"
+        @change="handleMenuClick()"
+      ></v-select>
+    </div>
     <ApplicationForm
       :type="type"
       :application="application"
@@ -43,15 +50,10 @@
           birthday: '',
         },
       },
+      selectedMenu: '',
+      menuItems: [{ text: 'Deslogar', value: 'logout' }],
     }),
     methods: {
-      logout() {
-        this.$store.dispatch('logout');
-        this.$router.push({ name: 'login' });
-      },
-      edit() {
-        this.$router.push({ name: 'edit' });
-      },
       handleEdit(application) {
         console.log(application);
         this.type = 'edit';
@@ -78,14 +80,19 @@
           }
         });
       },
+      handleMenuClick() {
+        if (this.selectedMenu === 'logout') {
+          this.$store.dispatch('logout');
+          this.$router.push({ name: 'login' });
+          this.selectedMenu = '';
+        }
+      },
     },
   };
 </script>
 
 <style scoped lang="scss">
-  .btn {
-    margin: auto;
-    margin-top: 20px;
-    margin-bottom: 10px;
+  .menu {
+    width: 200px;
   }
 </style>

@@ -5,35 +5,39 @@
       v-model="valid"
       @submit.prevent="handleSubmit()"
     >
-      <v-card width="400">
-        <v-card-title class="light-blue darken-4 white--text mt-8">
+      <v-card width="600" class="mx-auto">
+        <v-card-title class="white--text pa-5 card-title">
           <v-icon color="white">fa-user</v-icon>
-          <p class="ml-3">
+          <p class="ml-3 mb-0 ">
             Dados do cidadão
           </p>
         </v-card-title>
 
-        <v-card-text>
+        <v-card-text class="pa-8">
           <v-text-field
             label="CPF"
             :disabled="type === 'edit'"
             v-model="application.citizen.cpf"
             v-mask="'###########'"
-            append-outer-icon="mdi-alert-circle"
+            append-icon="mdi-alert-circle"
             :hint="CPFValidationMsg || 'Somente números'"
             :persistent-hint="!!CPFValidationMsg || false"
             inputmode="numeric"
             clearable
+            outlined
             @blur="validateCPF()"
             :rules="validators.cpf"
+            class="mb-4"
           ></v-text-field>
           <v-text-field
             label="Nome"
             v-model.trim="application.citizen.name"
             counter="45"
             clearable
-            append-outer-icon="mdi-alert-circle"
+            append-icon="mdi-alert-circle"
+            outlined
             :rules="validators.name"
+            class="mb-4"
           ></v-text-field>
           <v-select
             label="Grupo prioritário"
@@ -42,8 +46,10 @@
             item-text="name"
             item-value="id"
             no-data-text="Carregando..."
-            append-outer-icon="mdi-alert-circle"
+            append-icon="mdi-alert-circle"
             :rules="validators.categories"
+            outlined
+            class="mb-4"
           ></v-select>
           <v-select
             label="Grupo de atendimento"
@@ -52,8 +58,10 @@
             item-text="name"
             item-value="id"
             no-data-text="Carregando..."
-            append-outer-icon="mdi-alert-circle"
+            append-icon="mdi-alert-circle"
             :rules="validators.servicegroups"
+            outlined
+            class="mb-4"
           ></v-select>
           <v-text-field
             label="Data de nascimento"
@@ -63,6 +71,8 @@
             hint="somente números"
             inputmode="numeric"
             :rules="validators.birthday"
+            outlined
+            class="mb-4"
           ></v-text-field>
           <v-text-field
             label="CNS"
@@ -72,28 +82,30 @@
             v-model.trim="application.citizen.cns"
             inputmode="numeric"
             :rules="validators.cns"
+            outlined
+            class="mb-2"
           ></v-text-field>
         </v-card-text>
-      </v-card>
 
-      <v-card width="400">
-        <v-card-title class="light-blue darken-4 white--text mt-8">
+        <v-card-title class="white--text card-title pa-5">
           <v-icon color="white">fa-syringe</v-icon>
-          <p class="ml-3">
+          <p class="ml-3 mb-0">
             Dados da vacina
           </p>
         </v-card-title>
-        <v-card-text>
+        <v-card-text class="pa-8">
           <v-select
             label="Dose"
             v-model="application.dose"
             :rules="validators.dose"
+            outlined
             :items="[
               { text: 1, value: 1 },
               { text: 2, value: 2 },
             ]"
             disabled
-            append-outer-icon="mdi-alert-circle"
+            append-icon="mdi-alert-circle"
+            class="mb-4"
           ></v-select>
           <v-select
             label="Local"
@@ -102,8 +114,10 @@
             item-text="name"
             item-value="id"
             no-data-text="Carregando..."
-            append-outer-icon="mdi-alert-circle"
+            append-icon="mdi-alert-circle"
             :rules="validators.location"
+            outlined
+            class="mb-4"
           ></v-select>
           <v-autocomplete
             label="Vacinador"
@@ -112,8 +126,10 @@
             item-text="name"
             item-value="id"
             no-data-text="Carregando..."
-            append-outer-icon="mdi-alert-circle"
+            append-icon="mdi-alert-circle"
             :rules="validators.vaccinator"
+            outlined
+            class="mb-4"
           ></v-autocomplete>
           <v-select
             label="Lote"
@@ -121,8 +137,10 @@
             :items="lots"
             item-value="id"
             no-data-text="Carregando..."
-            append-outer-icon="mdi-alert-circle"
+            append-icon="mdi-alert-circle"
             :rules="validators.lot"
+            outlined
+            class="mb-4"
           >
             <template v-slot:selection="{ item }">
               {{ item.name }}
@@ -137,33 +155,23 @@
             type="date"
             min="2021-01-19"
             :max="today"
-            append-outer-icon="mdi-alert-circle"
+            append-icon="mdi-alert-circle"
             :rules="validators.application_date"
+            outlined
+            class="mb-4"
           >
           </v-text-field>
+          <v-btn class="white--text btn" elevation="2" type="submit">
+            {{ type === 'create' ? 'Cadastrar' : 'Editar' }}
+          </v-btn>
+          <v-btn v-if="type === 'edit'" @click="handleCancel()" elevation="2">
+            Cancelar
+          </v-btn>
+          <div class="message">
+            {{ message }}
+          </div>
         </v-card-text>
       </v-card>
-
-      <div class="validation-errors" v-if="errors.length">
-        <b>Por favor, corrija o(s) seguinte(s) erro(s):</b>
-        <ol>
-          <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
-        </ol>
-      </div>
-      <v-btn color="primary" elevation="2" type="submit">
-        {{ type === 'create' ? 'Cadastrar' : 'Editar' }}
-      </v-btn>
-      <v-btn
-        v-if="type === 'edit'"
-        @click="handleCancel()"
-        color="danger"
-        elevation="2"
-      >
-        Cancelar
-      </v-btn>
-      <div class="message">
-        {{ message }}
-      </div>
     </v-form>
   </v-container>
 </template>
@@ -372,33 +380,13 @@
 </script>
 
 <style scoped>
-  form {
-    padding: 10px 20px;
-    max-width: 100vw;
-    min-width: 60vw;
-  }
-  h3 {
-    padding-top: 20px;
-    margin-bottom: 15px;
-  }
-  .validation-errors {
-    padding-top: 20px;
-    padding-bottom: 5px;
-  }
-  .validation-errors li {
-    padding-top: 5px;
-    color: red;
-  }
-  .fields-container {
+  .card-title {
     display: flex;
-    flex-direction: column;
-    background-color: rgba(237, 244, 245, 0.972);
-    padding: 15px 30px;
+    justify-content: center;
+    align-items: center;
+    background-color: #aa4465;
   }
-  .fields-container:not(:first-child) {
-    margin-top: 40px;
-  }
-  .v-input {
-    width: 70%;
+  .btn {
+    background-color: #af7b48e1 !important;
   }
 </style>

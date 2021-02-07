@@ -1,15 +1,15 @@
 <template>
   <section>
-    <v-card width="400">
-      <v-card-title class="light-blue darken-4 white--text mt-8">
+    <v-card width="600" class="mx-auto mt-8 mb-8">
+      <v-card-title class="white--text pa-5 card-title">
         <v-icon color="white">fa-laptop</v-icon>
-        <p class="ml-3">
+        <p class="ml-3 mb-0">
           Vacinações digitadas por {{ this.$store.state.user.name }}
         </p>
       </v-card-title>
 
-      <v-card-text>
-        <h3>Buscar vacinações de datas anteriores</h3>
+      <v-card-text class="pa-8">
+        <h3>Buscar vacinações de datas anteriores:</h3>
         <v-text-field
           label="CPF"
           v-model="cpf"
@@ -21,6 +21,8 @@
           :persistent-hint="!!searchCPFMsg || false"
           inputmode="numeric"
           :rules="validators.cpf"
+          outlined
+          class="mb-4"
         ></v-text-field>
         <div class="font-weight-bold ml-8 mb-2">
           Hoje
@@ -30,9 +32,7 @@
           <v-timeline-item
             v-for="userApplication in userApplications"
             :key="userApplication.id"
-            :color="
-              userApplication.dose === 1 ? 'deep-purple lighten-1' : 'green'
-            "
+            :color="userApplication.dose === 1 ? '#CEB8A1' : '#6862A7'"
             small
           >
             <div class="timeline-content">
@@ -41,9 +41,10 @@
                   <strong>{{ userApplication.citizen.name }}</strong>
                 </div>
                 <div>CPF: {{ userApplication.citizen.cpf }}</div>
+                <div>Dose: {{ userApplication.dose }}</div>
               </div>
               <a @click.prevent="$emit('onEdit', userApplication)">
-                <v-icon>
+                <v-icon class="ml-7">
                   far fa-edit
                 </v-icon>
               </a>
@@ -80,5 +81,14 @@
   .timeline-content {
     display: flex;
     align-items: center;
+  }
+  .card-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #aa4465;
+  }
+  h3 {
+    margin-bottom: 10px;
   }
 </style>
